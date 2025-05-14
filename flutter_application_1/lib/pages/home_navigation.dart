@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'proximas_entregas_page.dart';
 import 'publicar_anuncio_page.dart';
+import 'package:flutter_application_1/pages/gestão_Encomendas.dart';
 
 class HomeNavigation extends StatefulWidget {
   const HomeNavigation({Key? key}) : super(key: key);
@@ -25,7 +26,10 @@ class _HomeNavigationState extends State<HomeNavigation> {
         onPublishSuccess: () => setState(() { _selectedIndex = 0; }),
         onBackToIndex: () => setState(() { _selectedIndex = _previousIndex; }),
       ),
-      Center(child: Text('Perfil', style: TextStyle(fontSize: 24))),
+      GestaoEncomendasPage(
+        onBack: () => setState(() { _selectedIndex = _previousIndex; }),
+      ),
+      //Center(child: Text('Perfil', style: TextStyle(fontSize: 24))),
       Center(child: Text('Ferramentas', style: TextStyle(fontSize: 24))),
     ];
   }
