@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import '../routes/app_routes.dart';
 import 'proximas_entregas_page.dart';
 import 'publicar_anuncio_page.dart';
-import 'package:flutter_application_1/pages/gestão_Encomendas.dart';
+import 'gestão_Encomendas.dart';
 
 class HomeNavigation extends StatefulWidget {
   const HomeNavigation({Key? key}) : super(key: key);
@@ -11,82 +12,107 @@ class HomeNavigation extends StatefulWidget {
 }
 
 class _HomeNavigationState extends State<HomeNavigation> {
-  int _selectedIndex = 1; // Começa na segunda aba (Entregas)
-  int _previousIndex = 1;
-
-  late List<Widget> _pages;
-
-  @override
-  void initState() {
-    super.initState();
-    _pages = [
-      Center(child: Text('Página Inicial', style: TextStyle(fontSize: 24))),
-      ProximasEntregasPage(),
-      PublicarAnuncioPage(
-        onPublishSuccess: () => setState(() { _selectedIndex = 0; }),
-        onBackToIndex: () => setState(() { _selectedIndex = _previousIndex; }),
-      ),
-      GestaoEncomendasPage(
-        onBack: () => setState(() { _selectedIndex = _previousIndex; }),
-      ),
-      //Center(child: Text('Perfil', style: TextStyle(fontSize: 24))),
-      Center(child: Text('Ferramentas', style: TextStyle(fontSize: 24))),
-    ];
-  }
-
-  void _onItemTapped(int index) {
-    if (index == 2) {
-      _previousIndex = _selectedIndex;
-    }
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+  int _selectedIndex = 0;
+  final _navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_selectedIndex],
-      bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          color: Color(0xFF2E7D5A),
-          border: Border(
-            top: BorderSide(color: Colors.white, width: 1),
-          ),
-        ),
-        child: BottomNavigationBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          type: BottomNavigationBarType.fixed,
-          selectedItemColor: Colors.white,
-          unselectedItemColor: Colors.white,
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home, size: 32),
-              label: '',
+      body: Navigator(
+        key: _navigatorKey,
+        initialRoute: AppRoutes.home,
+        onGenerateRoute: (settings) {
+          Widget page;
+          switch (settings.name) {
+            case AppRoutes.home:
+              page = const Center(child: Text('Home')); // Placeholder para a página Home
+              break;
+            case AppRoutes.proximasEntregas:
+              page = ProximasEntregasPage();
+              break;
+            case AppRoutes.publicarAnuncio:
+              page = PublicarAnuncioPage(
+                onPublishSuccess: () => _navigatorKey.currentState?.pop(),
+                onBackToIndex: () => _navigatorKey.currentState?.pop(),
+              );
+              break;
+            case AppRoutes.gestaoEncomendas:
+              page = GestaoEncomendasPage(
+                onBack: () => _navigatorKey.currentState?.pop(),
+              );
+              break;
+            default:
+              page = Center(child: Text('Página não encontrada', style: TextStyle(fontSize: 24)));
+          }
+          return MaterialPageRoute(
+            builder: (context) => Scaffold(
+              body: page,
+              bottomNavigationBar: Container(
+                decoration: const BoxDecoration(
+                  color: Color(0xFF2E7D5A),
+                  border: Border(
+                    top: BorderSide(color: Colors.white, width: 1),
+                  ),
+                ),
+                child: BottomNavigationBar(
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  type: BottomNavigationBarType.fixed,
+                  selectedItemColor: Colors.white,
+                  unselectedItemColor: Colors.white,
+                  showSelectedLabels: false,
+                  showUnselectedLabels: false,
+                  currentIndex: _selectedIndex,
+                  onTap: (index) {
+                    setState(() {
+                      _selectedIndex = index;
+                    });
+                    
+                    switch (index) {
+                      case 0:
+                        _navigatorKey.currentState?.pushReplacementNamed(AppRoutes.home);
+                        break;
+                      case 1:
+                        _navigatorKey.currentState?.pushNamed(AppRoutes.proximasEntregas);
+                        break;
+                      case 2:
+                        _navigatorKey.currentState?.pushNamed(AppRoutes.publicarAnuncio);
+                        break;
+                      case 3:
+                        _navigatorKey.currentState?.pushNamed(AppRoutes.gestaoEncomendas);
+                        break;
+                      case 4:
+                        // Página de Ferramentas
+                        break;
+                    }
+                  },
+                  items: const [
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.home, size: 32),
+                      label: '',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.shopping_bag, size: 32),
+                      label: '',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.add, size: 36),
+                      label: '',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.person, size: 32),
+                      label: '',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.build, size: 32),
+                      label: '',
+                    ),
+                  ],
+                ),
+              ),
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_bag, size: 32),
-              label: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.add, size: 36),
-              label: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person, size: 32),
-              label: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.build, size: 32),
-              label: '',
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

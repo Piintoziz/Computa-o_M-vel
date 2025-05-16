@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import '../routes/app_routes.dart';
 
 class Encomenda {
   final String nome;
@@ -203,6 +204,16 @@ class _ProximasEntregasPageState extends State<ProximasEntregasPage> {
       appBar: AppBar(
         backgroundColor: const Color(0xFF2E7D5A),
         elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white, size: 30),
+          onPressed: () {
+            if (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            } else {
+              Navigator.of(context).pushReplacementNamed(AppRoutes.home);
+            }
+          },
+        ),
         title: const Text(
           'Próximas entregas',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28, color: Colors.white),
