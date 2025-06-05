@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import '../pages/welcome_page.dart';
+import '../pages/login_page.dart';
+import '../pages/create_account_page.dart';
 import '../pages/home_navigation.dart';
 import '../pages/proximas_entregas_page.dart';
 import '../pages/publicar_anuncio_page.dart';
-import '../pages/gestão_Encomendas.dart';
+import '../pages/gestao_Encomendas.dart';
 import '../pages/detalhes_encomenda_page.dart';
 
 class AppRoutes {
+  static const String welcome = '/welcome';
+  static const String login = '/login';
+  static const String createAccount = '/create-account';
   static const String home = '/';
   static const String proximasEntregas = '/proximas-entregas';
   static const String publicarAnuncio = '/publicar-anuncio';
@@ -14,6 +20,9 @@ class AppRoutes {
 
   static Map<String, WidgetBuilder> getRoutes() {
     return {
+      welcome: (context) => WelcomePage(),
+      login: (context) => LoginPage(),
+      createAccount: (context) => CreateAccountPage(),
       home: (context) => const HomeNavigation(),
       proximasEntregas: (context) => ProximasEntregasPage(),
       publicarAnuncio: (context) => PublicarAnuncioPage(

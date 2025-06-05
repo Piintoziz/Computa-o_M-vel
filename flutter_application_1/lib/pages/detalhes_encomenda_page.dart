@@ -92,7 +92,36 @@ class DetalhesEncomendaPage extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Image.network(item.imagemUrl, width: 48, height: 48, fit: BoxFit.cover),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.network(
+                          item.imagemUrl,
+                          width: 48,
+                          height: 48,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              width: 48,
+                              height: 48,
+                              color: Colors.grey[200],
+                              child: const Icon(Icons.image_not_supported, color: Colors.grey),
+                            );
+                          },
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Container(
+                              width: 48,
+                              height: 48,
+                              color: Colors.grey[200],
+                              child: const Center(
+                                child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF2E7D5A)),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Column(

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../routes/app_routes.dart';
 import 'proximas_entregas_page.dart';
 import 'publicar_anuncio_page.dart';
-import 'gestão_Encomendas.dart';
+import 'gestao_Encomendas.dart';
 
 class HomeNavigation extends StatefulWidget {
   const HomeNavigation({Key? key}) : super(key: key);
