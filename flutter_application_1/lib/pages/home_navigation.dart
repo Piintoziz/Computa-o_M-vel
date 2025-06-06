@@ -3,6 +3,8 @@ import '../routes/app_routes.dart';
 import 'proximas_entregas_page.dart';
 import 'publicar_anuncio_page.dart';
 import 'gestao_Encomendas.dart';
+import 'menu_gestao.dart';
+import 'menu_principal.dart';
 
 class HomeNavigation extends StatefulWidget {
   const HomeNavigation({Key? key}) : super(key: key);
@@ -20,12 +22,12 @@ class _HomeNavigationState extends State<HomeNavigation> {
     return Scaffold(
       body: Navigator(
         key: _navigatorKey,
-        initialRoute: AppRoutes.home,
+        initialRoute: AppRoutes.menuPrincipal,
         onGenerateRoute: (settings) {
           Widget page;
           switch (settings.name) {
-            case AppRoutes.home:
-              page = const Center(child: Text('Home')); // Placeholder para a página Home
+            case AppRoutes.menuPrincipal:
+              page = const MainMenu();
               break;
             case AppRoutes.proximasEntregas:
               page = ProximasEntregasPage();
@@ -40,6 +42,9 @@ class _HomeNavigationState extends State<HomeNavigation> {
               page = GestaoEncomendasPage(
                 onBack: () => _navigatorKey.currentState?.pop(),
               );
+              break;
+            case AppRoutes.menuGestao:
+              page = const MenuGestao();
               break;
             default:
               page = Center(child: Text('Página não encontrada', style: TextStyle(fontSize: 24)));
@@ -70,7 +75,7 @@ class _HomeNavigationState extends State<HomeNavigation> {
                     
                     switch (index) {
                       case 0:
-                        _navigatorKey.currentState?.pushReplacementNamed(AppRoutes.home);
+                        _navigatorKey.currentState?.pushReplacementNamed(AppRoutes.menuPrincipal);
                         break;
                       case 1:
                         _navigatorKey.currentState?.pushNamed(AppRoutes.proximasEntregas);
@@ -82,7 +87,7 @@ class _HomeNavigationState extends State<HomeNavigation> {
                         _navigatorKey.currentState?.pushNamed(AppRoutes.gestaoEncomendas);
                         break;
                       case 4:
-                        // Página de Ferramentas
+                        _navigatorKey.currentState?.pushNamed(AppRoutes.menuGestao);
                         break;
                     }
                   },

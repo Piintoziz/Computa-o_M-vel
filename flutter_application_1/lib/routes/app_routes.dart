@@ -7,6 +7,9 @@ import '../pages/proximas_entregas_page.dart';
 import '../pages/publicar_anuncio_page.dart';
 import '../pages/gestao_Encomendas.dart';
 import '../pages/detalhes_encomenda_page.dart';
+import '../pages/gestao_encomendas_Faturacao.dart';
+import '../pages/menu_gestao.dart';
+import '../pages/menu_principal.dart';
 
 class AppRoutes {
   static const String welcome = '/welcome';
@@ -17,6 +20,9 @@ class AppRoutes {
   static const String publicarAnuncio = '/publicar-anuncio';
   static const String gestaoEncomendas = '/gestao-encomendas';
   static const String detalhesEncomenda = '/detalhes-encomenda';
+  static const String gestaoEncomendasFaturacao = '/gestao-encomendas-faturacao';
+  static const String menuGestao = '/menu-gestao';
+  static const String menuPrincipal = '/menu-principal';
 
   static Map<String, WidgetBuilder> getRoutes() {
     return {
@@ -32,6 +38,9 @@ class AppRoutes {
       gestaoEncomendas: (context) => GestaoEncomendasPage(
         onBack: () => Navigator.pop(context),
       ),
+      gestaoEncomendasFaturacao: (context) => const GestaoEncomendasFaturacaoPage(),
+      menuGestao: (context) => const MenuGestao(),
+      menuPrincipal: (context) => const MainMenu(),
     };
   }
 

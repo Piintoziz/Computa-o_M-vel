@@ -46,6 +46,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '528642462565',
     projectId: 'projeto-cm-43e67',
     authDomain: 'projeto-cm-43e67.firebaseapp.com',
+    databaseURL: 'https://projeto-cm-43e67-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'projeto-cm-43e67.firebasestorage.app',
     measurementId: 'G-TXX5QD4RB1',
   );
@@ -55,6 +56,7 @@ class DefaultFirebaseOptions {
     appId: '1:528642462565:android:1c43beb9cb2585ce15878c',
     messagingSenderId: '528642462565',
     projectId: 'projeto-cm-43e67',
+    databaseURL: 'https://projeto-cm-43e67-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'projeto-cm-43e67.firebasestorage.app',
   );
 
@@ -63,6 +65,7 @@ class DefaultFirebaseOptions {
     appId: '1:528642462565:ios:f38609eb8162891515878c',
     messagingSenderId: '528642462565',
     projectId: 'projeto-cm-43e67',
+    databaseURL: 'https://projeto-cm-43e67-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'projeto-cm-43e67.firebasestorage.app',
     iosBundleId: 'com.example.flutterApplication1',
   );
@@ -72,6 +75,7 @@ class DefaultFirebaseOptions {
     appId: '1:528642462565:ios:f38609eb8162891515878c',
     messagingSenderId: '528642462565',
     projectId: 'projeto-cm-43e67',
+    databaseURL: 'https://projeto-cm-43e67-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'projeto-cm-43e67.firebasestorage.app',
     iosBundleId: 'com.example.flutterApplication1',
   );
@@ -82,6 +86,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '528642462565',
     projectId: 'projeto-cm-43e67',
     authDomain: 'projeto-cm-43e67.firebaseapp.com',
+    databaseURL: 'https://projeto-cm-43e67-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'projeto-cm-43e67.firebasestorage.app',
     measurementId: 'G-B70KVWB077',
   );
