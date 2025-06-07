@@ -216,7 +216,9 @@ class _GestaoEncomendasFaturacaoPageState extends State<GestaoEncomendasFaturaca
                 ),
                 icon: const Icon(Icons.add),
                 label: const Text('Emitir fatura'),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, '/gestao-encomendas-emitir-fatura');
+                },
               ),
             ),
             const SizedBox(height: 16),

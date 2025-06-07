@@ -10,6 +10,7 @@ import '../pages/detalhes_encomenda_page.dart';
 import '../pages/gestao_encomendas_Faturacao.dart';
 import '../pages/menu_gestao.dart';
 import '../pages/menu_principal.dart';
+import '../pages/gestao_encomendas_emitir_fatura.dart';
 
 class AppRoutes {
   static const String welcome = '/welcome';
@@ -23,6 +24,7 @@ class AppRoutes {
   static const String gestaoEncomendasFaturacao = '/gestao-encomendas-faturacao';
   static const String menuGestao = '/menu-gestao';
   static const String menuPrincipal = '/menu-principal';
+  static const String gestaoEncomendasEmitirFatura = '/gestao-encomendas-emitir-fatura';
 
   static Map<String, WidgetBuilder> getRoutes() {
     return {
@@ -41,6 +43,7 @@ class AppRoutes {
       gestaoEncomendasFaturacao: (context) => const GestaoEncomendasFaturacaoPage(),
       menuGestao: (context) => const MenuGestao(),
       menuPrincipal: (context) => const MainMenu(),
+      gestaoEncomendasEmitirFatura: (context) => const GestaoEncomendasEmitirFaturaPage(),
     };
   }
 
