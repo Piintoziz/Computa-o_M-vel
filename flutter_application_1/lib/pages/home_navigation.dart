@@ -84,7 +84,7 @@ class _HomeNavigationState extends State<HomeNavigation> {
                         _navigatorKey.currentState?.pushNamed(AppRoutes.publicarAnuncio);
                         break;
                       case 3:
-                        _navigatorKey.currentState?.pushNamed(AppRoutes.gestaoEncomendas);
+                        // TODO: Implementar navegação para a nova página de perfil quando estiver pronta
                         break;
                       case 4:
                         _navigatorKey.currentState?.pushNamed(AppRoutes.menuGestao);

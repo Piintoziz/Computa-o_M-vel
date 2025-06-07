@@ -139,7 +139,7 @@ class _GestaoEncomendasFaturacaoPageState extends State<GestaoEncomendasFaturaca
         centerTitle: true,
         title: const Column(
           children: [
-            Text('Gestão', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26, color: Colors.white)),
+            Text('Gestão Faturação', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26, color: Colors.white)),
             SizedBox(height: 2),
             Text('Tudo num só lugar!', style: TextStyle(fontSize: 15, color: Colors.white)),
           ],

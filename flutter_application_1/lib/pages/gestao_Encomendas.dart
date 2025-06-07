@@ -233,7 +233,7 @@ class _GestaoEncomendasPageState extends State<GestaoEncomendasPage> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: const [
-            Text('Gestão', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28, color: Colors.white)),
+            Text('Gestão Encomendas', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26, color: Colors.white)),
             SizedBox(height: 2),
             Text('Tudo num só lugar!', style: TextStyle(fontSize: 14, color: Colors.white)),
           ],

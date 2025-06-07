@@ -263,45 +263,44 @@ class _GestaoDrawer extends StatelessWidget {
             _DrawerNavItem(
               label: 'Página Inicial',
               icon: Icons.home,
-              selected: true,
             ),
             _DrawerNavItem(
               label: 'Encomendas',
               icon: Icons.shopping_cart,
-              selected: false,
-              subItems: const [
-                'Faturação',
-                'Compras Abandonadas',
+              onTap: () => Navigator.pushNamed(context, '/gestao-encomendas'),
+              subItems: [
+                _DrawerSubItem(label: 'Faturação', onTap: () => Navigator.of(context, rootNavigator: true).pushNamed('/gestao-encomendas-faturacao')),
+                _DrawerSubItem(label: 'Compras Abandonadas', onTap: () {/* Adicione a rota desejada */}),
               ],
             ),
             _DrawerNavItem(
               label: 'Produtos',
               icon: Icons.local_grocery_store,
-              selected: false,
+              onTap: () {/* Adicione a rota desejada */},
             ),
             _DrawerNavItem(
               label: 'Clientes',
               icon: Icons.people,
-              selected: false,
+              onTap: () {/* Adicione a rota desejada */},
             ),
             _DrawerNavItem(
               label: 'Análise de Dados',
               icon: Icons.bar_chart,
-              selected: false,
-              subItems: const [
-                'Finanças',
-                'Canais de Vendas',
+              onTap: () {/* Adicione a rota desejada */},
+              subItems: [
+                _DrawerSubItem(label: 'Finanças', onTap: () {/* Adicione a rota desejada */}),
+                _DrawerSubItem(label: 'Canais de Vendas', onTap: () {/* Adicione a rota desejada */}),
               ],
             ),
             _DrawerNavItem(
               label: 'Anúncios',
               icon: Icons.ondemand_video,
-              selected: false,
+              onTap: () {/* Adicione a rota desejada */},
             ),
             _DrawerNavItem(
               label: 'Destacar Anúncios',
               icon: Icons.star,
-              selected: false,
+              onTap: () {/* Adicione a rota desejada */},
             ),
           ],
         ),
@@ -313,13 +312,13 @@ class _GestaoDrawer extends StatelessWidget {
 class _DrawerNavItem extends StatelessWidget {
   final String label;
   final IconData icon;
-  final bool selected;
-  final List<String>? subItems;
+  final VoidCallback? onTap;
+  final List<_DrawerSubItem>? subItems;
 
   const _DrawerNavItem({
     required this.label,
     required this.icon,
-    this.selected = false,
+    this.onTap,
     this.subItems,
     Key? key,
   }) : super(key: key);
@@ -329,30 +328,26 @@ class _DrawerNavItem extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-          decoration: selected
-              ? BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: const Color(0xFF2E7D5A), width: 2),
-                )
-              : null,
-          child: Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Icon(icon, color: selected ? const Color(0xFF2E7D5A) : Colors.white, size: 22),
-              ),
-              Text(
-                label,
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  color: selected ? const Color(0xFF2E7D5A) : Colors.white,
-                  fontWeight: FontWeight.normal,
+        InkWell(
+          onTap: onTap,
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(icon, color: Colors.white, size: 22),
                 ),
-              ),
-            ],
+                Text(
+                  label,
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    color: Colors.white,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         if (subItems != null)
@@ -360,19 +355,34 @@ class _DrawerNavItem extends StatelessWidget {
             padding: const EdgeInsets.only(left: 36.0, top: 2, bottom: 2),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: subItems!
-                  .map((s) => Text(
-                        s,
-                        style: GoogleFonts.poppins(
-                          fontSize: 12,
-                          color: Colors.white,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ))
-                  .toList(),
+              children: subItems!,
             ),
           ),
       ],
+    );
+  }
+}
+
+class _DrawerSubItem extends StatelessWidget {
+  final String label;
+  final VoidCallback? onTap;
+  const _DrawerSubItem({required this.label, this.onTap, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 2.0),
+        child: Text(
+          label,
+          style: GoogleFonts.poppins(
+            fontSize: 12,
+            color: Colors.white,
+            fontWeight: FontWeight.normal,
+          ),
+        ),
+      ),
     );
   }
 }
