@@ -13,6 +13,7 @@ class MainMenu extends StatelessWidget {
         child: AppBar(
           backgroundColor: const Color(0xFF2E7D5A),
           elevation: 0,
+          automaticallyImplyLeading: false,
           flexibleSpace: SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
@@ -20,7 +21,7 @@ class MainMenu extends StatelessWidget {
                 children: [
                   // Logo
                   Padding(
-                    padding: const EdgeInsets.only(left: 40.0),
+                    padding: const EdgeInsets.only(left: 10.0),
                     child: Image.asset(
                       'assets/images/logo.png',
                       height: 54,
