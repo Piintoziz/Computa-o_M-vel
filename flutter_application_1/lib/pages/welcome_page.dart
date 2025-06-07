@@ -9,7 +9,7 @@ class WelcomePage extends StatelessWidget {
   BuildContext? context;
 
   void displayLoginPage() {
-    Navigator.push(context!, MaterialPageRoute(builder:(context) => const LoginPage()));
+    Navigator.push(context!, MaterialPageRoute(builder:(context) => LoginPage()));
   }
 
   void displayCreateAccountPage() {

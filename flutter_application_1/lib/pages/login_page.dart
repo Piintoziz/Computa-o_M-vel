@@ -1,13 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../widgets/simple_button.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+  LoginPage({super.key});
+
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:  Stack(
+      body: Stack(
           children: [
             // Background Image:
             Image.asset(
@@ -20,63 +25,95 @@ class LoginPage extends StatelessWidget {
             //Welcome Page Controls:
             Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            //Top Arrow to back:
-            Row(
-              children: [
-                const Spacer(), 
-                IconButton(icon: const Icon(Icons.arrow_back), onPressed: (){Navigator.pop(context);},)
-              ],
-            ),
-
-            //Title:
-            Center(
-              child: Text(
-                'Login',
-                style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: Theme.of(context).primaryColor, fontWeight: FontWeight.w900)
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              //Top Arrow to back:
+              Row(
+                children: [
+                  const Spacer(), 
+                  IconButton(icon: const Icon(Icons.arrow_back), onPressed: (){Navigator.pop(context);},)
+                ],
               ),
-            ),
-
-            //EMAIL TEXTBOX:
-            const TextField(
-              decoration: InputDecoration(
-                labelText: 'Email or username:',
-                suffixIcon: Icon(Icons.person_outline),
-                border: UnderlineInputBorder(),
+          
+              //Title:
+              Center(
+                child: Text(
+                  'Login',
+                  style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: Theme.of(context).primaryColor, fontWeight: FontWeight.w900)
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-
-            //PASSWORD TEXTBOX:
-            const TextField(
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'Password:',
-                suffixIcon: Icon(Icons.visibility_outlined),
-                border: UnderlineInputBorder(),
+          
+              //EMAIL TEXTBOX:
+              TextFormField(
+                controller: _emailController,
+                validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your email';
+                      }
+                      if (!value.contains('@')) {
+                        return 'Please enter a valid email';
+                      }
+                      return null;
+                    },
+                decoration: InputDecoration(
+                  labelText: 'Email or username:',
+                  suffixIcon: Icon(Icons.person_outline),
+                  border: UnderlineInputBorder(),
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                SimpleButton(
-                  child: const Text("Login"), 
-                  onPressed: (){
-                    Navigator.pushReplacementNamed(context, '/');
+              const SizedBox(height: 8),
+          
+              //PASSWORD TEXTBOX:
+              TextFormField(
+                controller: _passwordController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your password';
                   }
+                  return null;
+                },
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: 'Password:',
+                  suffixIcon: Icon(Icons.visibility_outlined),
+                  border: UnderlineInputBorder(),
                 ),
-                const Spacer(),
-                TextButton(
-                  onPressed: () {
-                    //TODO: FORGOT PASSWORD
-                  },
-                  child: const Text('forgot password?'),
-                ),
-              ],
-            )
-          ]),
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  SimpleButton(
+                    child: const Text("Login"),
+                    onPressed: () async {
+                      try 
+                      {
+                        if (_formKey.currentState!.validate()) {
+                          var credential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: _emailController.text, password: _passwordController.text);
+                          if (credential.user != null) {
+                            Navigator.pushReplacementNamed(context, '/');
+                          }
+                        }
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Invalid email or password'))
+                          );
+                      }
+                    }
+                  ),
+                  const Spacer(),
+                  TextButton(
+                    onPressed: () {
+                      //TODO: FORGOT PASSWORD
+                    },
+                    child: const Text('forgot password?'),
+                  ),
+                ],
+              )
+            ]),
+        ),
         ),
       ]),
     ); 
