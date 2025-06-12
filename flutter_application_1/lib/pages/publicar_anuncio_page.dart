@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
+
 
 class PublicarAnuncioPage extends StatefulWidget {
   final VoidCallback? onPublishSuccess;
@@ -33,6 +37,8 @@ class _PublicarAnuncioPageState extends State<PublicarAnuncioPage> {
   final _campoAdicionalController = TextEditingController();
   final _nomeController = TextEditingController();
   final _telefoneController = TextEditingController();
+  final dataFormatada = DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now());
+
 
   Future<void> _pickImage(int index) async {
     final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -46,6 +52,33 @@ class _PublicarAnuncioPageState extends State<PublicarAnuncioPage> {
   void _removeImage(int index) {
     setState(() {
       _imagens[index] = null;
+    });
+  }
+
+  Future<void> publicarAnuncio() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('É necessário estar autenticado para publicar um anúncio.')),
+      );
+      return;
+    }
+    final anuncioRef = FirebaseDatabase.instance.ref('anuncios').push();
+    await anuncioRef.set({
+      'uid': user.uid,
+      'titulo': _tituloController.text.trim(),
+      'categoria': _categoriaSelecionada,
+      'descricao': _descricaoController.text.trim(),
+      'localizacao': _localizacaoController.text.trim(),
+      'opcaoEntrega': _entregaOptions[_selectedEntrega],
+      'quantidadeMinima': int.tryParse(_quantidadeController.text.trim()) ?? 0,
+      'preco': double.tryParse(_precoController.text.trim().replaceAll(',', '.')) ?? 0.0,
+      'medida': _medidaSelecionada,
+      'campoAdicional': _campoAdicionalController.text.trim(),
+      'nome': _nomeController.text.trim(),
+      'telefone': _telefoneController.text.trim(),
+      'dataPublicacao': dataFormatada,
+      // 'fotos': [...], // Adicionar aqui o upload das imagens se necessário
     });
   }
 
@@ -429,6 +462,7 @@ class _PublicarAnuncioPageState extends State<PublicarAnuncioPage> {
                           _nomeController.text.trim().isNotEmpty &&
                           _telefoneController.text.trim().isNotEmpty;
                         if (camposValidos) {
+                          await publicarAnuncio();
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text('Anúncio publicado com sucesso!'),

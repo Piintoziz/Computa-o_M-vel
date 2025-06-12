@@ -270,7 +270,7 @@ class _GestaoDrawer extends StatelessWidget {
               onTap: () => Navigator.pushNamed(context, '/gestao-encomendas'),
               subItems: [
                 _DrawerSubItem(label: 'Faturação', onTap: () => Navigator.of(context, rootNavigator: true).pushNamed('/gestao-encomendas-faturacao')),
-                _DrawerSubItem(label: 'Compras Abandonadas', onTap: () {/* Adicione a rota desejada */}),
+                _DrawerSubItem(label: 'Compras Abandonadas', onTap: () => Navigator.of(context, rootNavigator: true).pushNamed('/gestao-encomendas-compras-abandonadas')),
               ],
             ),
             _DrawerNavItem(

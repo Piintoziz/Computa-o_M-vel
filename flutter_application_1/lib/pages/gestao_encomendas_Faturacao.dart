@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class Fatura {
   final String numero;
@@ -16,15 +18,36 @@ class GestaoEncomendasFaturacaoPage extends StatefulWidget {
 }
 
 class _GestaoEncomendasFaturacaoPageState extends State<GestaoEncomendasFaturacaoPage> {
-  final List<Fatura> _todasFaturas = [
-    Fatura(numero: 'Fatura #1402', data: DateTime(2024, 4, 12), cliente: 'Miguel Narciso', valor: 1522),
-    Fatura(numero: 'Fatura #1402', data: DateTime(2024, 4, 13), cliente: 'Alexandre Ferreira', valor: 1523),
-    Fatura(numero: 'Fatura #1402', data: DateTime(2024, 4, 14), cliente: 'Tiago Dias', valor: 1542),
-    Fatura(numero: 'Fatura #1402', data: DateTime(2024, 4, 15), cliente: 'Mariana Pereira', valor: 1512),
-  ];
-
+  List<Fatura> _todasFaturas = [];
   String? _filtroCliente; // null = sem filtro
   String _ordenarPor = 'Data (mais recente)';
+
+  @override
+  void initState() {
+    super.initState();
+    _carregarFaturas();
+  }
+
+  Future<void> _carregarFaturas() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+    final snapshot = await FirebaseDatabase.instance.ref('faturas').orderByChild('uid').equalTo(user.uid).get(); //Teve de se indexar o campo "uid" para que o get funcionasse
+    final List<Fatura> faturas = [];
+    for (final child in snapshot.children) {
+      final data = child.value as Map<dynamic, dynamic>?;
+      if (data != null) {
+        faturas.add(Fatura(
+          numero: data['nomeCliente'] ?? '',
+          data: DateTime.tryParse(data['dataPagamento'] ?? '') ?? DateTime.now(),
+          cliente: data['nomeCliente'] ?? '',
+          valor: (data['totalFatura'] is num) ? (data['totalFatura'] as num).toDouble() : 0.0,
+        ));
+      }
+    }
+    setState(() {
+      _todasFaturas = faturas;
+    });
+  }
 
   List<Fatura> get _faturasFiltradas {
     var lista = _todasFaturas;
@@ -123,6 +146,68 @@ class _GestaoEncomendasFaturacaoPageState extends State<GestaoEncomendasFaturaca
           ],
         );
       },
+    );
+  }
+
+  void _mostrarFaturaDialog(Fatura fatura, Map<String, dynamic>? extraData) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        String formatarValor(dynamic valor) {
+          if (valor is num) {
+            return valor.toStringAsFixed(2);
+          }
+          return valor?.toString() ?? '';
+        }
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: const Text('Fatura', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22, color: Color(0xFF2E7D5A))),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 8),
+                _linhaFatura('Cliente:', fatura.cliente),
+                if (extraData != null) ...[
+                  _linhaFatura('NIF:', extraData['nif'] ?? ''),
+                  _linhaFatura('Morada:', extraData['moradaEmpresa'] ?? ''),
+                  _linhaFatura('Tipo:', extraData['tipo'] ?? ''),
+                  _linhaFatura('Método de Pagamento:', extraData['metodoPagamento'] ?? ''),
+                  _linhaFatura('Preço sem IVA:', '€${formatarValor((extraData['subTotalIva'] is num && extraData['totalFatura'] is num) ? (extraData['totalFatura'] as num) - (extraData['subTotalIva'] as num) : '')}'),
+                  _linhaFatura('IVA (23%):', '€${formatarValor(extraData['subTotalIva'])}'),
+                  _linhaFatura('Preço com IVA:', '€${formatarValor(extraData['totalFatura'])}'),
+                ],
+                _linhaFatura('Data:', '${fatura.data.day}/${fatura.data.month}/${fatura.data.year}'),
+                _linhaFatura('Valor:', '€${fatura.valor.toStringAsFixed(2)}'),
+                const SizedBox(height: 16),
+                const Divider(),
+                const Text('Obrigado pela sua preferência!', style: TextStyle(fontSize: 14, color: Color(0xFF2E7D5A))),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Fechar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _linhaFatura(String titulo, String valor) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(titulo, style: const TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(width: 8),
+          Expanded(child: Text(valor)),
+        ],
+      ),
     );
   }
 
@@ -226,7 +311,43 @@ class _GestaoEncomendasFaturacaoPageState extends State<GestaoEncomendasFaturaca
             const SizedBox(height: 8),
             Expanded(
               child: ListView(
-                children: _faturasFiltradas.map((f) => _buildFaturaCard(f.numero, _formatarData(f.data), f.cliente, '€ ${f.valor.toStringAsFixed(2)}')).toList(),
+                children: _faturasFiltradas.map((f) => _buildFaturaCard(
+                  f.numero,
+                  _formatarData(f.data),
+                  f.cliente,
+                  '€ ${f.valor.toStringAsFixed(2)}',
+                  onDelete: () async {
+                    // Procurar a fatura pelo nome e data para obter o idFatura
+                    final user = FirebaseAuth.instance.currentUser;
+                    if (user == null) return;
+                    final snapshot = await FirebaseDatabase.instance.ref('faturas').orderByChild('uid').equalTo(user.uid).get();
+                    for (final child in snapshot.children) {
+                      final data = child.value as Map<dynamic, dynamic>?;
+                      if (data != null && data['nomeCliente'] == f.cliente && (DateTime.tryParse(data['dataPagamento'] ?? '')?.day == f.data.day)) {
+                        await FirebaseDatabase.instance.ref('faturas/${child.key}').remove();
+                        setState(() {
+                          _todasFaturas.remove(f);
+                        });
+                        break;
+                      }
+                    }
+                  },
+                  onView: () async {
+                    // Buscar dados extra da fatura para mostrar no dialog
+                    final user = FirebaseAuth.instance.currentUser;
+                    if (user == null) return;
+                    final snapshot = await FirebaseDatabase.instance.ref('faturas').orderByChild('uid').equalTo(user.uid).get();
+                    Map<String, dynamic>? extraData;
+                    for (final child in snapshot.children) {
+                      final data = child.value as Map<dynamic, dynamic>?;
+                      if (data != null && data['nomeCliente'] == f.cliente && (DateTime.tryParse(data['dataPagamento'] ?? '')?.day == f.data.day)) {
+                        extraData = Map<String, dynamic>.from(data);
+                        break;
+                      }
+                    }
+                    _mostrarFaturaDialog(f, extraData);
+                  },
+                )).toList(),
               ),
             ),
           ],
@@ -247,43 +368,57 @@ class _GestaoEncomendasFaturacaoPageState extends State<GestaoEncomendasFaturaca
     return meses[mes];
   }
 
-  static Widget _buildFaturaCard(String numero, String data, String cliente, String valor) {
+  static Widget _buildFaturaCard(String numero, String data, String cliente, String valor, {required Function() onDelete, required Function() onView}) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Row(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(numero, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                  const SizedBox(height: 2),
-                  Text(data, style: const TextStyle(color: Colors.black54)),
-                  const SizedBox(height: 2),
-                  Text(cliente, style: const TextStyle(fontSize: 15)),
-                ],
-              ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(valor, style: const TextStyle(color: Color(0xFF2E7D5A), fontWeight: FontWeight.bold, fontSize: 16)),
-                const SizedBox(height: 8),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF2E7D5A),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 0),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(numero, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                      const SizedBox(height: 2),
+                      Text(data, style: const TextStyle(color: Colors.black54)),
+                      const SizedBox(height: 2),
+                      Text(cliente, style: const TextStyle(fontSize: 15)),
+                    ],
                   ),
-                  onPressed: () {},
-                  child: const Text('Ver fatura'),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(valor, style: const TextStyle(color: Color(0xFF2E7D5A), fontWeight: FontWeight.bold, fontSize: 16)),
+                    const SizedBox(height: 8),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF2E7D5A),
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 0),
+                      ),
+                      onPressed: onView,
+                      child: const Text('Ver fatura'),
+                    ),
+                  ],
                 ),
               ],
+            ),
+            const SizedBox(height: 8),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: IconButton(
+                icon: const Icon(Icons.delete, color: Colors.red),
+                tooltip: 'Apagar fatura',
+                onPressed: onDelete,
+              ),
             ),
           ],
         ),

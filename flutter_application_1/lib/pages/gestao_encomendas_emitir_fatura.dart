@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class GestaoEncomendasEmitirFaturaPage extends StatefulWidget {
   const GestaoEncomendasEmitirFaturaPage({Key? key}) : super(key: key);
@@ -202,16 +204,6 @@ class _GestaoEncomendasEmitirFaturaPageState extends State<GestaoEncomendasEmiti
               onChanged: (v) => setState(() => _cliente['morada'] = v),
             ),
             const SizedBox(height: 8),
-            TextFormField(
-              initialValue: _cliente['sigla'],
-              decoration: const InputDecoration(
-                labelText: 'Sigla',
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              ),
-              onChanged: (v) => setState(() => _cliente['sigla'] = v),
-            ),
-            const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -300,10 +292,35 @@ class _GestaoEncomendasEmitirFaturaPageState extends State<GestaoEncomendasEmiti
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 ),
-                onPressed: () {
+                onPressed: () async {
+                  final user = FirebaseAuth.instance.currentUser;
+                  if (user == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('É necessário estar autenticado para emitir uma fatura.')),
+                    );
+                    return;
+                  }
+                  final faturaRef = FirebaseDatabase.instance.ref('faturas').push();
+                  await faturaRef.set({
+                    'idFatura': faturaRef.key,
+                    'uid': user.uid,
+                    'tipo': _tipo,
+                    'dataPagamento': _dataPagamento?.toIso8601String(),
+                    'metodoPagamento': _metodoPagamento,
+                    'nomeCliente': _cliente['nome'],
+                    'nif': _cliente['nif'],
+                    'moradaEmpresa': _cliente['morada'],
+                    'subTotalIva': _iva,
+                    'totalFatura': _total,
+                    'dataEmissao': DateTime.now().toIso8601String(),
+                  });
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Fatura emitida (mock)!')),
+                    const SnackBar(content: Text('Fatura emitida e guardada com sucesso!')),
                   );
+                  await Future.delayed(const Duration(milliseconds: 800));
+                  if (mounted) {
+                    Navigator.of(context).pushReplacementNamed('/gestao-encomendas-faturacao');
+                  }
                 },
                 child: const Text('Emitir fatura'),
               ),
