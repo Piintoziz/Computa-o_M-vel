@@ -3,10 +3,12 @@ import 'create_account_page.dart';
 import 'login_page.dart';
 import '../widgets/continue_with_button.dart';
 import '../widgets/primary_button.dart';
+import '../services/auth_service.dart';
 
 class WelcomePage extends StatelessWidget {
   WelcomePage({super.key});
   BuildContext? context;
+  final AuthService _authService = AuthService();
 
   void displayLoginPage() {
     Navigator.push(context!, MaterialPageRoute(builder:(context) => LoginPage()));
@@ -20,8 +22,20 @@ class WelcomePage extends StatelessWidget {
     //TODO: Implementar autenticação com facebook
   }
 
-  void continueWithGoogle() {
-    //TODO: Implementar autenticação com google
+  Future<void> continueWithGoogle() async {
+    try {
+      final userCredential = await _authService.signInWithGoogle();
+      if (userCredential != null) {
+        ScaffoldMessenger.of(context!).showSnackBar(
+          SnackBar(content: Text('Login com Google realizado com sucesso'))
+        );
+        Navigator.pushReplacementNamed(context!, '/');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context!).showSnackBar(
+        SnackBar(content: Text('Erro ao realizar login com Google'))
+      );
+    }
   }
 
   void continueWithApple() {
