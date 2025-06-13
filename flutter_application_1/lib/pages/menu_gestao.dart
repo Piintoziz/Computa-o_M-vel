@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/pages/analise_dados_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MenuGestao extends StatelessWidget {
@@ -286,7 +287,7 @@ class _GestaoDrawer extends StatelessWidget {
             _DrawerNavItem(
               label: 'Análise de Dados',
               icon: Icons.bar_chart,
-              onTap: () {/* Adicione a rota desejada */},
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => AnaliseDadosPage())),
               subItems: [
                 _DrawerSubItem(label: 'Finanças', onTap: () {/* Adicione a rota desejada */}),
                 _DrawerSubItem(label: 'Canais de Vendas', onTap: () {/* Adicione a rota desejada */}),

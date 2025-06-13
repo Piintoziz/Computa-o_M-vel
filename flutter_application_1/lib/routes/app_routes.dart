@@ -12,6 +12,7 @@ import '../pages/menu_gestao.dart';
 import '../pages/menu_principal.dart';
 import '../pages/gestao_encomendas_emitir_fatura.dart';
 import '../pages/gestao_encomendas_compras_abandonadas.dart';
+import '../pages/analise_dados_page.dart';
 
 class AppRoutes {
   static const String welcome = '/welcome';
@@ -27,6 +28,7 @@ class AppRoutes {
   static const String menuPrincipal = '/menu-principal';
   static const String gestaoEncomendasEmitirFatura = '/gestao-encomendas-emitir-fatura';
   static const String gestaoEncomendasComprasAbandonadas = '/gestao-encomendas-compras-abandonadas';
+  static const String analiseDados = '/analise-dados';
 
   static Map<String, WidgetBuilder> getRoutes() {
     return {
@@ -47,6 +49,7 @@ class AppRoutes {
       menuPrincipal: (context) => const MainMenu(),
       gestaoEncomendasEmitirFatura: (context) => const GestaoEncomendasEmitirFaturaPage(),
       gestaoEncomendasComprasAbandonadas: (context) => const GestaoEncomendasComprasAbandonadasPage(),
+      analiseDados: (context) => AnaliseDadosPage(),
     };
   }
 
