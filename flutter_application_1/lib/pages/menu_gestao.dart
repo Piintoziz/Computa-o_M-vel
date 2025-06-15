@@ -282,7 +282,7 @@ class _GestaoDrawer extends StatelessWidget {
             _DrawerNavItem(
               label: 'Clientes',
               icon: Icons.people,
-              onTap: () {/* Adicione a rota desejada */},
+              onTap: () => Navigator.of(context, rootNavigator: true).pushNamed('/contacts'),
             ),
             _DrawerNavItem(
               label: 'Análise de Dados',
