@@ -137,7 +137,9 @@ class _GestaoEncomendasComprasAbandonadasPageState extends State<GestaoEncomenda
                           ),
                           const SizedBox(width: 8),
                           ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              _mostrarLembreteEnviado(context, compra['nome']);
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF2E7D5A),
                               foregroundColor: Colors.white,
@@ -155,6 +157,30 @@ class _GestaoEncomendasComprasAbandonadasPageState extends State<GestaoEncomenda
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _mostrarLembreteEnviado(BuildContext context, String nome) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text('Lembrete Enviado!', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF2E7D5A))),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.check_circle, color: Color(0xFF2E7D5A), size: 48),
+            const SizedBox(height: 12),
+            Text('Foi enviado um lembrete para o cliente $nome com sucesso!', textAlign: TextAlign.center),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Fechar'),
+          ),
+        ],
       ),
     );
   }

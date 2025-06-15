@@ -82,6 +82,77 @@ class _PublicarAnuncioPageState extends State<PublicarAnuncioPage> {
     });
   }
 
+  void _mostrarPreVisualizacao() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: const Text('Pré-visualização do Anúncio', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22, color: Color(0xFF2E7D5A))),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: _imagens.where((img) => img != null).isNotEmpty
+                    ? _imagens.where((img) => img != null).map((img) => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.file(
+                            File(img!.path),
+                            width: 80,
+                            height: 80,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      )).toList()
+                    : [const Icon(Icons.image, size: 60, color: Colors.grey)],
+                ),
+                const SizedBox(height: 16),
+                _linhaPreview('Título:', _tituloController.text),
+                _linhaPreview('Categoria:', _categoriaSelecionada ?? ''),
+                _linhaPreview('Descrição:', _descricaoController.text),
+                _linhaPreview('Localização:', _localizacaoController.text),
+                _linhaPreview('Opção de Entrega:', _entregaOptions[_selectedEntrega]),
+                _linhaPreview('Quantidade mínima:', _quantidadeController.text),
+                _linhaPreview('Preço:', _precoController.text + ' €'),
+                _linhaPreview('Medida:', _medidaSelecionada ?? ''),
+                if (_campoAdicionalController.text.isNotEmpty)
+                  _linhaPreview('Campo Adicional:', _campoAdicionalController.text),
+                const Divider(),
+                const Text('Dados de Contacto', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF2E7D5A))),
+                _linhaPreview('Nome:', _nomeController.text),
+                _linhaPreview('Telefone:', _telefoneController.text),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Fechar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _linhaPreview(String titulo, String valor) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(titulo, style: const TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(width: 8),
+          Expanded(child: Text(valor)),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -438,7 +509,9 @@ class _PublicarAnuncioPageState extends State<PublicarAnuncioPage> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        _mostrarPreVisualizacao();
+                      },
                       style: TextButton.styleFrom(
                         foregroundColor: const Color(0xFF2E7D5A),
                         textStyle: const TextStyle(fontWeight: FontWeight.bold, decoration: TextDecoration.underline),
