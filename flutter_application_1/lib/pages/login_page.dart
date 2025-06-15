@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/pages/forgot_password.dart';
 import '../widgets/simple_button.dart';
 
 class LoginPage extends StatelessWidget {
@@ -106,7 +107,7 @@ class LoginPage extends StatelessWidget {
                   const Spacer(),
                   TextButton(
                     onPressed: () {
-                      //TODO: FORGOT PASSWORD
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const ForgotPasswordPage()));
                     },
                     child: const Text('forgot password?'),
                   ),
