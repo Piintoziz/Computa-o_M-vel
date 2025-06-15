@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/pages/relatorio_analise_dados_page.dart';
 
 class AnaliseDadosPage extends StatelessWidget {
   // Hardcoded data (to be replaced by DB later)
@@ -76,28 +77,33 @@ class AnaliseDadosPage extends StatelessWidget {
               ),
               const SizedBox(height: 18),
               // Relatórios Card
-              Card(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                elevation: 0,
-                color: Colors.grey[50],
-                child: Padding(
-                  padding: const EdgeInsets.all(18.0),
-                  child: Row(
-                    children: [
-                      Icon(Icons.insert_chart_outlined, size: 38, color: primaryColor),
-                      const SizedBox(width: 18),
-                      const Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Relatórios', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87)),
-                            SizedBox(height: 4),
-                            Text('Gere relatórios detalhados num determinado intervalo de tempo',
-                              style: TextStyle(fontSize: 14, color: Colors.black87)),
-                          ],
+              InkWell(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const RelatorioAnaliseDadosPage()));
+                },
+                child: Card(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  elevation: 0,
+                  color: Colors.grey[50],
+                  child: Padding(
+                    padding: const EdgeInsets.all(18.0),
+                    child: Row(
+                      children: [
+                        Icon(Icons.insert_chart_outlined, size: 38, color: primaryColor),
+                        const SizedBox(width: 18),
+                        const Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Relatórios', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87)),
+                              SizedBox(height: 4),
+                              Text('Gere relatórios detalhados num determinado intervalo de tempo',
+                                style: TextStyle(fontSize: 14, color: Colors.black87)),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
