@@ -24,7 +24,7 @@ class Encomenda {
 
 class GestaoEncomendasPage extends StatefulWidget {
   final VoidCallback? onBack;
-  GestaoEncomendasPage({Key? key, this.onBack}) : super(key: key);
+  const GestaoEncomendasPage({Key? key, this.onBack}) : super(key: key);
 
   @override
   State<GestaoEncomendasPage> createState() => _GestaoEncomendasPageState();
@@ -230,9 +230,9 @@ class _GestaoEncomendasPageState extends State<GestaoEncomendasPage> {
           },
         ),
         centerTitle: true,
-        title: Column(
+        title: const Column(
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: const [
+          children: [
             Text('Gestão Encomendas', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26, color: Colors.white)),
             SizedBox(height: 2),
             Text('Tudo num só lugar!', style: TextStyle(fontSize: 14, color: Colors.white)),
@@ -263,7 +263,7 @@ class _GestaoEncomendasPageState extends State<GestaoEncomendasPage> {
                           const Text('Filtrar', style: TextStyle(color: Colors.black)),
                           if (_filtroEstado != null) ...[
                             const SizedBox(width: 4),
-                            Icon(Icons.filter_alt, size: 18, color: Colors.green),
+                            const Icon(Icons.filter_alt, size: 18, color: Colors.green),
                           ],
                         ],
                       ),
@@ -287,9 +287,9 @@ class _GestaoEncomendasPageState extends State<GestaoEncomendasPage> {
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                         padding: const EdgeInsets.symmetric(vertical: 10),
                       ),
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
+                        children: [
                           Text('Ordenar', style: TextStyle(color: Colors.black)),
                           SizedBox(width: 4),
                           Icon(Icons.arrow_drop_down, color: Colors.black),
@@ -307,7 +307,7 @@ class _GestaoEncomendasPageState extends State<GestaoEncomendasPage> {
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    border: Border.all(color: Color(0xFF2E7D5A), width: 4),
+                    border: Border.all(color: const Color(0xFF2E7D5A), width: 4),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Padding(
@@ -334,7 +334,7 @@ class _GestaoEncomendasPageState extends State<GestaoEncomendasPage> {
                               child: Container(
                                 height: 4,
                                 decoration: BoxDecoration(
-                                  color: Color(0xFF3B6B7A),
+                                  color: const Color(0xFF3B6B7A),
                                   borderRadius: BorderRadius.circular(2),
                                 ),
                               ),
@@ -348,7 +348,7 @@ class _GestaoEncomendasPageState extends State<GestaoEncomendasPage> {
                             estado,
                             style: TextStyle(
                               fontSize: 13,
-                              color: estado == e.estadoAtual ? Color(0xFF3B6B7A) : Colors.black54,
+                              color: estado == e.estadoAtual ? const Color(0xFF3B6B7A) : Colors.black54,
                               fontWeight: estado == e.estadoAtual ? FontWeight.bold : FontWeight.normal,
                             ),
                           )).toList(),
@@ -357,8 +357,8 @@ class _GestaoEncomendasPageState extends State<GestaoEncomendasPage> {
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Column(
-                              children: const [
+                            const Column(
+                              children: [
                                 Icon(Icons.person, size: 32, color: Colors.black),
                                 SizedBox(height: 12),
                                 Icon(Icons.inventory_2, size: 32, color: Colors.black),
@@ -398,7 +398,7 @@ class _GestaoEncomendasPageState extends State<GestaoEncomendasPage> {
                                     );
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Color(0xFF3B6B7A),
+                                    backgroundColor: const Color(0xFF3B6B7A),
                                     foregroundColor: Colors.white,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20),

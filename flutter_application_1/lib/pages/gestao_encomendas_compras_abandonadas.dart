@@ -79,7 +79,7 @@ class _GestaoEncomendasComprasAbandonadasPageState extends State<GestaoEncomenda
                 Expanded(
                   child: DropdownButtonFormField<String>(
                     value: _filtro,
-                    items: [DropdownMenuItem(value: 'Filtrar', child: Text('Filtrar'))],
+                    items: [const DropdownMenuItem(value: 'Filtrar', child: Text('Filtrar'))],
                     onChanged: (v) {},
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
@@ -91,7 +91,7 @@ class _GestaoEncomendasComprasAbandonadasPageState extends State<GestaoEncomenda
                 Expanded(
                   child: DropdownButtonFormField<String>(
                     value: _ordenarPor,
-                    items: [DropdownMenuItem(value: 'Ordenar', child: Text('Ordenar'))],
+                    items: [const DropdownMenuItem(value: 'Ordenar', child: Text('Ordenar'))],
                     onChanged: (v) {},
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),

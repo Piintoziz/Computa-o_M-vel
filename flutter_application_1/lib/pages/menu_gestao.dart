@@ -77,7 +77,7 @@ class MenuGestao extends StatelessWidget {
                   color: const Color(0xFF2E7D5A),
                   borderRadius: BorderRadius.circular(24),
                 ),
-                child: Column(
+                child: const Column(
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -86,7 +86,7 @@ class MenuGestao extends StatelessWidget {
                         _OverviewItem(title: 'Encomendas\nPendentes', value: '3'),
                       ],
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -261,7 +261,7 @@ class _GestaoDrawer extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: [
             const SizedBox(height: 32),
-            _DrawerNavItem(
+            const _DrawerNavItem(
               label: 'Página Inicial',
               icon: Icons.home,
             ),

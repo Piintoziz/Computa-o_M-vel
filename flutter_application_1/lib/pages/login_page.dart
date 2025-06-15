@@ -58,7 +58,7 @@ class LoginPage extends StatelessWidget {
                       }
                       return null;
                     },
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Email or username:',
                   suffixIcon: Icon(Icons.person_outline),
                   border: UnderlineInputBorder(),
@@ -76,10 +76,10 @@ class LoginPage extends StatelessWidget {
                   return null;
                 },
                 obscureText: true,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Password:',
                   suffixIcon: Icon(Icons.visibility_outlined),
-                  border: UnderlineInputBorder(),
+                  border: const UnderlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 8),
@@ -98,7 +98,7 @@ class LoginPage extends StatelessWidget {
                         }
                       } catch (e) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Invalid email or password'))
+                            const SnackBar(content: Text('Invalid email or password'))
                           );
                       }
                     }

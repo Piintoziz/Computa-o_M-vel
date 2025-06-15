@@ -129,9 +129,9 @@ class _PublicarAnuncioPageState extends State<PublicarAnuncioPage> {
                         border: Border.all(color: Colors.grey[400]!),
                       ),
                       child: _imagens[index] == null
-                          ? Column(
+                          ? const Column(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
+                              children: [
                                 Icon(Icons.add, size: 36, color: Colors.grey),
                                 SizedBox(height: 4),
                                 Text('Adicionar fotos', style: TextStyle(color: Colors.grey)),
@@ -153,7 +153,7 @@ class _PublicarAnuncioPageState extends State<PublicarAnuncioPage> {
                                   child: GestureDetector(
                                     onTap: () => _removeImage(index),
                                     child: Container(
-                                      decoration: BoxDecoration(
+                                      decoration: const BoxDecoration(
                                         color: Colors.black54,
                                         shape: BoxShape.circle,
                                       ),
@@ -173,9 +173,9 @@ class _PublicarAnuncioPageState extends State<PublicarAnuncioPage> {
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(
                   hintText: 'Título Apelativo',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey)),
-                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey)),
-                  focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Color(0xFF2E7D5A))),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Colors.grey)),
+                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Colors.grey)),
+                  focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Color(0xFF2E7D5A))),
                   contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                   filled: true,
                   fillColor: Colors.white,
@@ -188,9 +188,9 @@ class _PublicarAnuncioPageState extends State<PublicarAnuncioPage> {
                 onChanged: (v) => setState(() => _categoriaSelecionada = v),
                 decoration: InputDecoration(
                   hintText: '      Categoria',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey)),
-                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey)),
-                  focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Color(0xFF2E7D5A))),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Colors.grey)),
+                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Colors.grey)),
+                  focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Color(0xFF2E7D5A))),
                   contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                   filled: true,
                   fillColor: Colors.white,
@@ -212,9 +212,9 @@ class _PublicarAnuncioPageState extends State<PublicarAnuncioPage> {
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(
                   hintText: 'Descrição',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey)),
-                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey)),
-                  focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Color(0xFF2E7D5A))),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Colors.grey)),
+                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Colors.grey)),
+                  focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Color(0xFF2E7D5A))),
                   contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                   filled: true,
                   fillColor: Colors.white,
@@ -226,9 +226,9 @@ class _PublicarAnuncioPageState extends State<PublicarAnuncioPage> {
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(
                   hintText: 'Localização',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey)),
-                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey)),
-                  focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Color(0xFF2E7D5A))),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Colors.grey)),
+                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Colors.grey)),
+                  focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Color(0xFF2E7D5A))),
                   contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                   filled: true,
                   fillColor: Colors.white,
@@ -267,9 +267,9 @@ class _PublicarAnuncioPageState extends State<PublicarAnuncioPage> {
                       textAlign: TextAlign.center,
                       decoration: InputDecoration(
                         hintText: 'Quantidade mínima',
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey)),
-                        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey)),
-                        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Color(0xFF2E7D5A))),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Colors.grey)),
+                        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Colors.grey)),
+                        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Color(0xFF2E7D5A))),
                         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                         filled: true,
                         fillColor: Colors.white,
@@ -283,20 +283,20 @@ class _PublicarAnuncioPageState extends State<PublicarAnuncioPage> {
                         Expanded(
                           child: TextField(
                             controller: _precoController,
-                            keyboardType: TextInputType.numberWithOptions(decimal: true),
+                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
                             inputFormatters: [
                               FilteringTextInputFormatter.allow(RegExp(r'^[0-9]*[.,]?[0-9]{0,2}')),
                             ],
                             decoration: InputDecoration(
                               hintText: 'Preço',
-                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey)),
-                              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey)),
-                              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Color(0xFF2E7D5A))),
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Colors.grey)),
+                              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Colors.grey)),
+                              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Color(0xFF2E7D5A))),
                               contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                               filled: true,
                               fillColor: Colors.white,
                               suffixText: '€',
-                              suffixStyle: TextStyle(fontWeight: FontWeight.bold),
+                              suffixStyle: const TextStyle(fontWeight: FontWeight.bold),
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -316,9 +316,9 @@ class _PublicarAnuncioPageState extends State<PublicarAnuncioPage> {
                       onChanged: (v) => setState(() => _medidaSelecionada = v),
                       decoration: InputDecoration(
                         hintText: 'Medida',
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey)),
-                        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey)),
-                        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Color(0xFF2E7D5A))),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Colors.grey)),
+                        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Colors.grey)),
+                        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Color(0xFF2E7D5A))),
                         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                         filled: true,
                         fillColor: Colors.white,
@@ -342,9 +342,9 @@ class _PublicarAnuncioPageState extends State<PublicarAnuncioPage> {
                       textAlign: TextAlign.center,
                       decoration: InputDecoration(
                         hintText: 'Campo Adicional',
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey)),
-                        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey)),
-                        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Color(0xFF2E7D5A))),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Colors.grey)),
+                        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Colors.grey)),
+                        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Color(0xFF2E7D5A))),
                         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                         filled: true,
                         fillColor: Colors.white,
@@ -364,9 +364,9 @@ class _PublicarAnuncioPageState extends State<PublicarAnuncioPage> {
                       textAlign: TextAlign.center,
                       decoration: InputDecoration(
                         hintText: 'Nome',
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey)),
-                        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey)),
-                        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Color(0xFF2E7D5A))),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Colors.grey)),
+                        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Colors.grey)),
+                        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Color(0xFF2E7D5A))),
                         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                         filled: true,
                         fillColor: Colors.white,
@@ -384,9 +384,9 @@ class _PublicarAnuncioPageState extends State<PublicarAnuncioPage> {
                       textAlign: TextAlign.center,
                       decoration: InputDecoration(
                         hintText: 'NºTelefone',
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey)),
-                        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey)),
-                        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Color(0xFF2E7D5A))),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Colors.grey)),
+                        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Colors.grey)),
+                        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Color(0xFF2E7D5A))),
                         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                         filled: true,
                         fillColor: Colors.white,

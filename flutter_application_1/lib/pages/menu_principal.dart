@@ -67,9 +67,9 @@ class MainMenu extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               // Top row with two products
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: const [
+                children: [
                   _ProductCard(
                     imageUrl: 'https://images.unsplash.com/photo-1502741338009-cac2772e18bc',
                     price: '4.00€/Kg',
@@ -88,9 +88,9 @@ class MainMenu extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               // Bottom row with one product centered
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   _ProductCard(
                     imageUrl: 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca',
                     price: '2.00€/Kg',

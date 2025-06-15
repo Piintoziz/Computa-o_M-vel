@@ -30,7 +30,7 @@ class _HomeNavigationState extends State<HomeNavigation> {
               page = const MainMenu();
               break;
             case AppRoutes.proximasEntregas:
-              page = ProximasEntregasPage();
+              page = const ProximasEntregasPage();
               break;
             case AppRoutes.publicarAnuncio:
               page = PublicarAnuncioPage(
@@ -47,7 +47,7 @@ class _HomeNavigationState extends State<HomeNavigation> {
               page = const MenuGestao();
               break;
             default:
-              page = Center(child: Text('Página não encontrada', style: TextStyle(fontSize: 24)));
+              page = const Center(child: Text('Página não encontrada', style: TextStyle(fontSize: 24)));
           }
           return MaterialPageRoute(
             builder: (context) => Scaffold(

@@ -27,13 +27,13 @@ class WelcomePage extends StatelessWidget {
       final userCredential = await _authService.signInWithGoogle();
       if (userCredential != null) {
         ScaffoldMessenger.of(context!).showSnackBar(
-          SnackBar(content: Text('Login com Google realizado com sucesso'))
+        const SnackBar(content: Text('Login com Google realizado com sucesso'))
         );
         Navigator.pushReplacementNamed(context!, '/');
       }
     } catch (e) {
       ScaffoldMessenger.of(context!).showSnackBar(
-        SnackBar(content: Text('Erro ao realizar login com Google'))
+        const SnackBar(content: Text('Erro ao realizar login com Google'))
       );
     }
   }

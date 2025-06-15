@@ -34,9 +34,9 @@ class AppRoutes {
     return {
       welcome: (context) => WelcomePage(),
       login: (context) => LoginPage(),
-      createAccount: (context) => CreateAccountPage(),
+      createAccount: (context) => const CreateAccountPage(),
       home: (context) => const HomeNavigation(),
-      proximasEntregas: (context) => ProximasEntregasPage(),
+      proximasEntregas: (context) => const ProximasEntregasPage(),
       publicarAnuncio: (context) => PublicarAnuncioPage(
         onPublishSuccess: () => Navigator.pop(context),
         onBackToIndex: () => Navigator.pop(context),

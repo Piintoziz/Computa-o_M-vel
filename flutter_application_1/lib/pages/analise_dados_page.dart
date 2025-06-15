@@ -33,13 +33,13 @@ class AnaliseDadosPage extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
-        title: Text(
+        title: const Text(
           'Análise de dados',
           style: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.bold,
             color: Colors.white,
-            shadows: const [
+            shadows: [
               Shadow(
                 offset: Offset(2, 2),
                 blurRadius: 2,
@@ -66,7 +66,7 @@ class AnaliseDadosPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 8),
-              Text(
+              const Text(
                 'Análise de dados',
                 style: TextStyle(
                   fontSize: 24,
@@ -86,12 +86,12 @@ class AnaliseDadosPage extends StatelessWidget {
                     children: [
                       Icon(Icons.insert_chart_outlined, size: 38, color: primaryColor),
                       const SizedBox(width: 18),
-                      Expanded(
+                      const Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text('Relatórios', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87)),
-                            const SizedBox(height: 4),
+                            SizedBox(height: 4),
                             Text('Gere relatórios detalhados num determinado intervalo de tempo',
                               style: TextStyle(fontSize: 14, color: Colors.black87)),
                           ],
@@ -117,10 +117,10 @@ class AnaliseDadosPage extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Visitas á banca', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87)),
+                            const Text('Visitas á banca', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87)),
                             const SizedBox(height: 4),
                             Text('Numero de visitas: $visitas\nEpicentro das vendas: $epicentro',
-                              style: TextStyle(fontSize: 14, color: Colors.black87)),
+                              style: const TextStyle(fontSize: 14, color: Colors.black87)),
                           ],
                         ),
                       ),
@@ -147,7 +147,7 @@ class AnaliseDadosPage extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(vertical: 4.0),
                           child: Row(
                             children: [
-                              SizedBox(width: 90, child: Text(entry.key, style: TextStyle(fontSize: 15))),
+                              SizedBox(width: 90, child: Text(entry.key, style: const TextStyle(fontSize: 15))),
                               Expanded(
                                 child: LinearProgressIndicator(
                                   value: percent,
@@ -157,7 +157,7 @@ class AnaliseDadosPage extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(width: 10),
-                              Text('€ ${entry.value}', style: TextStyle(fontSize: 15)),
+                              Text('€ ${entry.value}', style: const TextStyle(fontSize: 15)),
                             ],
                           ),
                         );
@@ -185,7 +185,7 @@ class AnaliseDadosPage extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(vertical: 4.0),
                           child: Row(
                             children: [
-                              SizedBox(width: 90, child: Text(entry.key, style: TextStyle(fontSize: 15))),
+                              SizedBox(width: 90, child: Text(entry.key, style: const TextStyle(fontSize: 15))),
                               Expanded(
                                 child: LinearProgressIndicator(
                                   value: percent,
@@ -195,17 +195,17 @@ class AnaliseDadosPage extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(width: 10),
-                              Text('€ ${entry.value}', style: TextStyle(fontSize: 15)),
+                              Text('€ ${entry.value}', style: const TextStyle(fontSize: 15)),
                             ],
                           ),
                         );
                       }).toList(),
                       const SizedBox(height: 10),
-                      Text('Finanças', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black87)),
+                      const Text('Finanças', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black87)),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Column(
+                          const Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text('Receita', style: TextStyle(fontSize: 16)),
@@ -215,8 +215,8 @@ class AnaliseDadosPage extends StatelessWidget {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              Text('€$receita', style: TextStyle(fontSize: 16)),
-                              Text('€$lucro', style: TextStyle(fontSize: 16)),
+                              Text('€$receita', style: const TextStyle(fontSize: 16)),
+                              Text('€$lucro', style: const TextStyle(fontSize: 16)),
                             ],
                           ),
                         ],

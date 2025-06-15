@@ -276,9 +276,9 @@ class _GestaoEncomendasFaturacaoPageState extends State<GestaoEncomendasFaturaca
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                       padding: const EdgeInsets.symmetric(vertical: 10),
                     ),
-                    child: Row(
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children: [
                         Text('Ordenar', style: TextStyle(color: Colors.black)),
                         SizedBox(width: 4),
                         Icon(Icons.arrow_drop_down, color: Colors.black),

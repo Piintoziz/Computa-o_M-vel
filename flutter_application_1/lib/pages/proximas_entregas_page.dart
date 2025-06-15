@@ -261,7 +261,7 @@ class _ProximasEntregasPageState extends State<ProximasEntregasPage> {
                           const Text('Consultar'),
                           if (_pesquisa.isNotEmpty) ...[
                             const SizedBox(width: 4),
-                            Icon(Icons.search, size: 18, color: Colors.blue),
+                            const Icon(Icons.search, size: 18, color: Colors.blue),
                           ],
                         ],
                       ),
@@ -286,7 +286,7 @@ class _ProximasEntregasPageState extends State<ProximasEntregasPage> {
                           const Text('Filtrar'),
                           if (_filtroEstado != null) ...[
                             const SizedBox(width: 4),
-                            Icon(Icons.filter_alt, size: 18, color: Colors.green),
+                            const Icon(Icons.filter_alt, size: 18, color: Colors.green),
                           ],
                         ],
                       ),
@@ -308,12 +308,12 @@ class _ProximasEntregasPageState extends State<ProximasEntregasPage> {
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         elevation: 0,
                       ),
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text('Ordenar'),
-                          const SizedBox(width: 4),
-                          Icon(Icons.arrow_drop_down, size: 20),
+                          Text('Ordenar'),
+                          SizedBox(width: 4),
+                          const Icon(Icons.arrow_drop_down, size: 20),
                         ],
                       ),
                     ),
@@ -380,7 +380,7 @@ class _ProximasEntregasPageState extends State<ProximasEntregasPage> {
                                 Text(e.valor.toStringAsFixed(2)),
                               ] else ...[
                                 const Text('📅 ', style: TextStyle(fontSize: 18)),
-                                Text('Recolha em 3 dias - até as 10h00'),
+                                const Text('Recolha em 3 dias - até as 10h00'),
                               ]
                             ],
                           ),
@@ -407,8 +407,8 @@ class _ProximasEntregasPageState extends State<ProximasEntregasPage> {
                 ),
               )),
               const SizedBox(height: 32),
-              Row(
-                children: const [
+              const Row(
+                children: [
                   Expanded(
                     child: Divider(
                       color: Color(0xFF2E7D5A),
@@ -428,7 +428,7 @@ class _ProximasEntregasPageState extends State<ProximasEntregasPage> {
                       fontWeight: FontWeight.bold,
                       fontSize: 24,
                       color: Colors.black87,
-                      shadows: [Shadow(color: Colors.black12, offset: Offset(1,1), blurRadius: 2)],
+                      shadows: [const Shadow(color: Colors.black12, offset: Offset(1,1), blurRadius: 2)],
                     ),
                   ),
                   const SizedBox(height: 4),
