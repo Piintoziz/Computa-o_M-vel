@@ -4,6 +4,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_application_1/pages/message_page.dart';
 import 'dart:async';
 
+import 'package:flutter_application_1/pages/start_talking_page.dart';
+
 class ContactsPage extends StatefulWidget {
   const ContactsPage({Key? key}) : super(key: key);
 
@@ -14,7 +16,9 @@ class ContactsPage extends StatefulWidget {
 class _ContactsPageState extends State<ContactsPage> {
   Timer? _timer;
   List<dynamic> _contacts = [];
+  List<dynamic> _filteredContacts = [];
   bool _isLoading = true;
+  final TextEditingController _searchController = TextEditingController();
 
   Future<List<dynamic>> fetchContactNames() async {
     try {
@@ -59,9 +63,19 @@ class _ContactsPageState extends State<ContactsPage> {
     if (mounted) {
       setState(() {
         _contacts = newContacts;
+        _filteredContacts = newContacts;
         _isLoading = false;
       });
     }
+  }
+
+  void _filterContacts(String query) {
+    setState(() {
+      _filteredContacts = _contacts.where((contact) {
+        final name = contact['name'].toString().toLowerCase();
+        return name.contains(query.toLowerCase());
+      }).toList();
+    });
   }
 
   @override
@@ -69,11 +83,15 @@ class _ContactsPageState extends State<ContactsPage> {
     super.initState();
     _refreshData();
     _startTimer();
+    _searchController.addListener(() {
+      _filterContacts(_searchController.text);
+    });
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -122,43 +140,70 @@ class _ContactsPageState extends State<ContactsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Clientes', style: TextStyle(fontWeight: FontWeight.bold),), backgroundColor: Theme.of(context).primaryColor, centerTitle: true, foregroundColor: Colors.white,),
-      body:
-         _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : _contacts.isEmpty
-                ? const Center(child: Text('Sem conversas!'))
-                : ListView.builder(
-                    itemCount: _contacts.length,
-                    itemBuilder: (context, index) {
-                      final name = _contacts[index]['name'];
-                      final id = _contacts[index]['id'];
-                      return ListTile(
-                        leading: CircleAvatar(
-                          child: Text(
-                            name.isNotEmpty ? name[0].toUpperCase() : '?',
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        title: Text(name),
-                        trailing: PopupMenuButton(
-                          itemBuilder: (BuildContext context) { return [
-                            PopupMenuItem(child: const Text('Enviar mensagem'), onTap: () => _showMessage(context, id, name)),
-                            PopupMenuItem(child: const Text('Encomendas'), onTap: () {/* TODO: Show the orders of this user*/}),
-                            PopupMenuItem(
-                              child: const Text('Apagar'),
-                              onTap: () => _deleteAllMessages(id),
+      appBar: AppBar(
+        title: const Text('Clientes', style: TextStyle(fontWeight: FontWeight.bold)),
+        backgroundColor: Theme.of(context).primaryColor,
+        centerTitle: true,
+        foregroundColor: Colors.white,
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                hintText: 'Pesquisar contactos...',
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                contentPadding: const EdgeInsets.symmetric(vertical: 0),
+              ),
+            ),
+          ),
+          Expanded(
+            child: _isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : _filteredContacts.isEmpty
+                    ? const Center(child: Text('Sem conversas!'))
+                    : ListView.builder(
+                        itemCount: _filteredContacts.length,
+                        itemBuilder: (context, index) {
+                          final name = _filteredContacts[index]['name'];
+                          final id = _filteredContacts[index]['id'];
+                          return ListTile(
+                            leading: CircleAvatar(
+                              backgroundColor: const Color(0xff80BAA3),
+                              child: Text(
+                                name.isNotEmpty ? name[0].toUpperCase() : '?',
+                                style: const TextStyle(fontWeight: FontWeight.bold),
+                              ),
                             ),
-                          ]; },
-                          icon: const Icon(Icons.more_vert),
-                        ),
-                        onTap: () => _showMessage(context, id, name),
-                      );
-                    },
-                  ),
+                            title: Text(name),
+                            trailing: PopupMenuButton(
+                              itemBuilder: (BuildContext context) { return [
+                                PopupMenuItem(child: const Text('Enviar mensagem'), onTap: () => _showMessage(context, id, name)),
+                                PopupMenuItem(child: const Text('Encomendas'), onTap: () {/* TODO: Show the orders of this user*/}),
+                                PopupMenuItem(
+                                  child: const Text('Apagar'),
+                                  onTap: () => _deleteAllMessages(id),
+                                ),
+                              ]; },
+                              icon: const Icon(Icons.more_vert),
+                            ),
+                            onTap: () => _showMessage(context, id, name),
+                          );
+                        },
+                      ),
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Colors.white,
+        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const StartTalkingPage())),
         child: const Icon(Icons.add),
-        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const MessagePage(otherUserID: '', userName: ''))),
       ),
     );
   }

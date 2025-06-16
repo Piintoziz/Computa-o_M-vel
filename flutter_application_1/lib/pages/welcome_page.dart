@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'create_account_page.dart';
 import 'login_page.dart';
@@ -29,7 +30,16 @@ class WelcomePage extends StatelessWidget {
         ScaffoldMessenger.of(context!).showSnackBar(
         const SnackBar(content: Text('Login com Google realizado com sucesso'))
         );
+        await FirebaseDatabase.instance.ref('userdata/${userCredential.user?.uid}').set({
+          'name': userCredential.user?.displayName ?? '',
+          'email': userCredential.user?.email ?? '',
+        });
         Navigator.pushReplacementNamed(context!, '/');
+      }
+      else {
+        ScaffoldMessenger.of(context!).showSnackBar(
+        const SnackBar(content: Text('Erro ao realizar login com Google'))
+      );
       }
     } catch (e) {
       ScaffoldMessenger.of(context!).showSnackBar(

@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../widgets/simple_button.dart';
@@ -40,6 +41,10 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
       );
       
       if (mounted) {
+        await FirebaseDatabase.instance.ref('userdata/${FirebaseAuth.instance.currentUser?.uid}').set({
+          'name': _emailController.text.trim().split('@')[0].replaceAll('.', ' '),
+          'email': _emailController.text.trim(),
+        });
         Navigator.pushReplacementNamed(context, '/');
       }
     } on FirebaseAuthException catch (e) {
