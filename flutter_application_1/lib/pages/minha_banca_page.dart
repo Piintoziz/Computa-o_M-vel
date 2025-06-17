@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'dart:convert';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 class MinhaBancaPage extends StatefulWidget {
   const MinhaBancaPage({Key? key}) : super(key: key);
@@ -14,12 +17,38 @@ class _MinhaBancaPageState extends State<MinhaBancaPage> {
   List<Map<String, dynamic>> _anuncios = [];
   final TextEditingController _shopNameController = TextEditingController();
   String _shopName = 'Nome da Loja'; // Default value
+  String? _imagemBancaBase64;
+  List<int> _expandedIndexes = [];
+  final List<Map<String, dynamic>> _avaliacoesMock = [
+    {
+      'nome': 'Cliente 1',
+      'avatar': null,
+      'rating': 5,
+      'texto': 'Tudo perfeito e a qualidade é notável! Muito satisfeito',
+      'data': 'Há 1 semana',
+    },
+    {
+      'nome': 'Cliente 2',
+      'avatar': null,
+      'rating': 4,
+      'texto': 'Melhorei bastante a qualidade do meu Restaurante!',
+      'data': 'Há 2 semanas',
+    },
+    {
+      'nome': 'Cliente 3',
+      'avatar': null,
+      'rating': 5,
+      'texto': 'Tudo perfeito e a qualidade é notável! Muito satisfeito',
+      'data': 'Há 1 semana',
+    },
+  ];
 
   @override
   void initState() {
     super.initState();
     _carregarAnuncios();
     _carregarNomeLoja();
+    _carregarImagemBanca();
   }
 
   Future<void> _carregarNomeLoja() async {
@@ -56,12 +85,168 @@ class _MinhaBancaPageState extends State<MinhaBancaPage> {
           'nome': data['titulo'] ?? '',
           'preco': data['preco'] != null ? '${data['preco']}€/kg' : 'x€/kg',
           'id': child.key,
+          'categoria': data['categoria'] ?? '',
+          'localizacao': data['localizacao'] ?? '',
+          'medida': data['medida'] ?? '',
+          'opcaoEntrega': data['opcaoEntrega'] ?? '',
+          'quantidadeMinima': data['quantidadeMinima']?.toString() ?? '',
+          'telefone': data['telefone'] ?? '',
+          'descricao': data['descricao'] ?? '',
         });
       }
     }
     setState(() {
       _anuncios = anuncios;
     });
+  }
+
+  Future<void> _carregarImagemBanca() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+    final snapshot = await FirebaseDatabase.instance.ref('userdata/${user.uid}/imagem_banca').get();
+    if (snapshot.exists && snapshot.value != null) {
+      setState(() {
+        _imagemBancaBase64 = snapshot.value.toString();
+      });
+    }
+  }
+
+  Future<void> _alterarImagemBanca() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      final bytes = await File(pickedFile.path).readAsBytes();
+      final base64Image = base64Encode(bytes);
+      await FirebaseDatabase.instance.ref('userdata/${user.uid}/imagem_banca').set(base64Image);
+      setState(() {
+        _imagemBancaBase64 = base64Image;
+      });
+    }
+  }
+
+  void _editarAnuncio(Map<String, dynamic> anuncio) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+    final anuncioId = anuncio['id'];
+    final anuncioRef = FirebaseDatabase.instance.ref('anuncios/$anuncioId');
+    final snapshot = await anuncioRef.get();
+    if (!snapshot.exists) return;
+    final data = Map<String, dynamic>.from(snapshot.value as Map);
+
+    final TextEditingController tituloController = TextEditingController(text: data['titulo'] ?? '');
+    final TextEditingController categoriaController = TextEditingController(text: data['categoria'] ?? '');
+    final TextEditingController descricaoController = TextEditingController(text: data['descricao'] ?? '');
+    final TextEditingController localizacaoController = TextEditingController(text: data['localizacao'] ?? '');
+    final TextEditingController medidaController = TextEditingController(text: data['medida'] ?? '');
+    final TextEditingController nomeController = TextEditingController(text: data['nome'] ?? '');
+    final TextEditingController opcaoEntregaController = TextEditingController(text: data['opcaoEntrega'] ?? '');
+    final TextEditingController precoController = TextEditingController(text: data['preco']?.toString() ?? '');
+    final TextEditingController quantidadeMinimaController = TextEditingController(text: data['quantidadeMinima']?.toString() ?? '');
+    final TextEditingController telefoneController = TextEditingController(text: data['telefone'] ?? '');
+
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Editar Anúncio'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                TextField(controller: tituloController, decoration: const InputDecoration(labelText: 'Título')),
+                TextField(controller: categoriaController, decoration: const InputDecoration(labelText: 'Categoria')),
+                TextField(controller: descricaoController, decoration: const InputDecoration(labelText: 'Descrição')),
+                TextField(controller: localizacaoController, decoration: const InputDecoration(labelText: 'Localização')),
+                TextField(controller: medidaController, decoration: const InputDecoration(labelText: 'Medida')),
+                TextField(controller: nomeController, decoration: const InputDecoration(labelText: 'Nome')),
+                TextField(controller: opcaoEntregaController, decoration: const InputDecoration(labelText: 'Opção de Entrega')),
+                TextField(controller: precoController, decoration: const InputDecoration(labelText: 'Preço')),
+                TextField(controller: quantidadeMinimaController, decoration: const InputDecoration(labelText: 'Quantidade Mínima')),
+                TextField(controller: telefoneController, decoration: const InputDecoration(labelText: 'Telefone')),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancelar'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                await anuncioRef.update({
+                  'titulo': tituloController.text.trim(),
+                  'categoria': categoriaController.text.trim(),
+                  'descricao': descricaoController.text.trim(),
+                  'localizacao': localizacaoController.text.trim(),
+                  'medida': medidaController.text.trim(),
+                  'nome': nomeController.text.trim(),
+                  'opcaoEntrega': opcaoEntregaController.text.trim(),
+                  'preco': double.tryParse(precoController.text.replaceAll(',', '.')) ?? 0.0,
+                  'quantidadeMinima': int.tryParse(quantidadeMinimaController.text) ?? 0,
+                  'telefone': telefoneController.text.trim(),
+                });
+                Navigator.of(context).pop();
+                _carregarAnuncios();
+              },
+              child: const Text('Guardar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _toggleExpand(int index) {
+    setState(() {
+      if (_expandedIndexes.contains(index)) {
+        _expandedIndexes.remove(index);
+      } else {
+        _expandedIndexes.add(index);
+      }
+    });
+  }
+
+  Widget _infoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('$label: ', style: const TextStyle(fontWeight: FontWeight.bold)),
+          Expanded(child: Text(value)),
+        ],
+      ),
+    );
+  }
+
+  Widget _divider() => const Divider(height: 18, thickness: 0.7);
+
+  Widget? _infoRowWithIcon(IconData icon, String label, String? value) {
+    if (value == null || value.isEmpty) return null;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, size: 18, color: Colors.teal[700]),
+          const SizedBox(width: 8),
+          Text('$label: ', style: const TextStyle(fontWeight: FontWeight.bold)),
+          Expanded(child: Text(value)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStars(int n) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: List.generate(5, (i) => Icon(
+        i < n ? Icons.star : Icons.star_border,
+        color: Color(0xFF2E7D5A),
+        size: 22,
+      )),
+    );
   }
 
   @override
@@ -175,11 +360,21 @@ class _MinhaBancaPageState extends State<MinhaBancaPage> {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: Image.network(
-                      'https://images.unsplash.com/photo-1506744038136-46273834b3fb',
-                      height: 80,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
+                    child: GestureDetector(
+                      onTap: _alterarImagemBanca,
+                      child: _imagemBancaBase64 != null
+                        ? Image.memory(
+                            base64Decode(_imagemBancaBase64!),
+                            height: 80,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          )
+                        : Image.network(
+                            'https://images.unsplash.com/photo-1506744038136-46273834b3fb',
+                            height: 80,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          ),
                     ),
                   ),
                   TextButton.icon(
@@ -209,39 +404,86 @@ class _MinhaBancaPageState extends State<MinhaBancaPage> {
                       return Card(
                         margin: const EdgeInsets.symmetric(vertical: 8),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                        child: Row(
+                        child: Column(
                           children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: Image.network(
-                                anuncio['imagem'],
-                                width: 80,
-                                height: 80,
-                                fit: BoxFit.cover,
+                            Row(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: (
+                                    anuncio['imagem'] != null && (anuncio['imagem'] as String).startsWith('data:image') == false && (anuncio['imagem'] as String).length > 100
+                                  ) ? Image.memory(
+                                    base64Decode(anuncio['imagem']),
+                                    width: 80,
+                                    height: 80,
+                                    fit: BoxFit.cover,
+                                  )
+                                  : Image.network(
+                                    anuncio['imagem'],
+                                    width: 80,
+                                    height: 80,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(anuncio['nome'], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                                      Text(anuncio['preco'], style: const TextStyle(fontSize: 14)),
+                                    ],
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.edit, color: Colors.black54),
+                                  onPressed: () => _editarAnuncio(anuncio),
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.delete, color: Colors.red),
+                                  onPressed: () {
+                                    // Implementar exclusão do anúncio
+                                  },
+                                ),
+                                IconButton(
+                                  icon: Icon(_expandedIndexes.contains(i) ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down),
+                                  onPressed: () => _toggleExpand(i),
+                                ),
+                              ],
+                            ),
+                            if (_expandedIndexes.contains(i))
+                              Container(
+                                margin: const EdgeInsets.only(top: 8, bottom: 12),
+                                padding: const EdgeInsets.all(14),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[100],
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _infoRowWithIcon(Icons.category, 'Categoria', anuncio['categoria']),
+                                    _divider(),
+                                    _infoRowWithIcon(Icons.location_on, 'Localização', anuncio['localizacao']),
+                                    _divider(),
+                                    _infoRowWithIcon(Icons.straighten, 'Medida', anuncio['medida']),
+                                    _divider(),
+                                    _infoRowWithIcon(Icons.person, 'Nome', anuncio['nome']),
+                                    _divider(),
+                                    _infoRowWithIcon(Icons.local_shipping, 'Opção de Entrega', anuncio['opcaoEntrega']),
+                                    _divider(),
+                                    _infoRowWithIcon(Icons.euro, 'Preço', anuncio['preco']),
+                                    _divider(),
+                                    _infoRowWithIcon(Icons.numbers, 'Quantidade Mínima', anuncio['quantidadeMinima'].toString()),
+                                    _divider(),
+                                    _infoRowWithIcon(Icons.phone, 'Telefone', anuncio['telefone']),
+                                    _divider(),
+                                    _infoRowWithIcon(Icons.title, 'Título', anuncio['nome']),
+                                    _divider(),
+                                    _infoRowWithIcon(Icons.description, 'Descrição', anuncio['descricao']),
+                                  ].whereType<Widget>().toList(),
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(anuncio['nome'], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                                  Text(anuncio['preco'], style: const TextStyle(fontSize: 14)),
-                                ],
-                              ),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.edit, color: Colors.black54),
-                              onPressed: () {
-                                // Implementar edição do anúncio
-                              },
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.red),
-                              onPressed: () {
-                                // Implementar exclusão do anúncio
-                              },
-                            ),
                           ],
                         ),
                       );
@@ -249,10 +491,111 @@ class _MinhaBancaPageState extends State<MinhaBancaPage> {
                   ),
             ),
           ] else ...[
-            // Avaliações Tab (placeholder)
-            const Expanded(
-              child: Center(
-                child: Text('Avaliações do produtor em breve!', style: TextStyle(fontSize: 16, color: Colors.black54)),
+            // Avaliações Tab
+            Padding(
+              padding: const EdgeInsets.only(left: 32, right: 32, bottom: 8),
+              child: Row(
+                children: [
+                  Text('4,0', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32)),
+                  const SizedBox(width: 8),
+                  _buildStars(4),
+                  const SizedBox(width: 8),
+                  Text('(70 Avaliações)', style: TextStyle(color: Colors.black54)),
+                ],
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                itemCount: _avaliacoesMock.length + 1,
+                itemBuilder: (context, i) {
+                  if (i < _avaliacoesMock.length) {
+                    final avaliacao = _avaliacoesMock[i];
+                    return Card(
+                      margin: const EdgeInsets.symmetric(vertical: 8),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      elevation: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CircleAvatar(
+                              radius: 28,
+                              backgroundColor: Colors.grey[300],
+                              child: Icon(Icons.person, size: 36, color: Colors.grey[700]),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _buildStars(avaliacao['rating']),
+                                  const SizedBox(height: 2),
+                                  Text(avaliacao['texto'], style: const TextStyle(fontSize: 15)),
+                                  const SizedBox(height: 6),
+                                  Row(
+                                    children: [
+                                      Text(avaliacao['data'], style: const TextStyle(color: Colors.black45, fontSize: 13)),
+                                      const SizedBox(width: 12),
+                                      OutlinedButton(
+                                        onPressed: () async {
+                                          final TextEditingController _respostaController = TextEditingController();
+                                          final result = await showDialog<String>(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                title: const Text('Responder à avaliação'),
+                                                content: TextField(
+                                                  controller: _respostaController,
+                                                  maxLines: 3,
+                                                  decoration: const InputDecoration(hintText: 'Escreva a sua resposta...'),
+                                                ),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () => Navigator.of(context).pop(),
+                                                    child: const Text('Cancelar'),
+                                                  ),
+                                                  ElevatedButton(
+                                                    onPressed: () => Navigator.of(context).pop(_respostaController.text.trim()),
+                                                    child: const Text('Enviar'),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                          if (result != null && result.isNotEmpty) {
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              const SnackBar(content: Text('Resposta enviada com sucesso!')),
+                                            );
+                                          }
+                                        },
+                                        style: OutlinedButton.styleFrom(
+                                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+                                          minimumSize: const Size(0, 28),
+                                          side: const BorderSide(color: Colors.black26),
+                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                        ),
+                                        child: const Text('Responder', style: TextStyle(fontSize: 13)),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  } else {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        child: Text('▼ Ver mais (68)', style: TextStyle(color: Colors.grey[600], fontWeight: FontWeight.w500)),
+                      ),
+                    );
+                  }
+                },
               ),
             ),
           ],

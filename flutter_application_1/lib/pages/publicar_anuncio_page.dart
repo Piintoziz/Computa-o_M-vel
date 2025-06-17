@@ -6,6 +6,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:convert';
 
 
 class PublicarAnuncioPage extends StatefulWidget {
@@ -40,13 +41,20 @@ class _PublicarAnuncioPageState extends State<PublicarAnuncioPage> {
   final _telefoneController = TextEditingController();
   final dataFormatada = DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now());
 
+  bool _isPickingImage = false;
 
   Future<void> _pickImage(int index) async {
-    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _imagens[index] = pickedFile;
-      });
+    if (_isPickingImage) return;
+    _isPickingImage = true;
+    try {
+      final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        setState(() {
+          _imagens[index] = pickedFile;
+        });
+      }
+    } finally {
+      _isPickingImage = false;
     }
   }
 
@@ -67,24 +75,15 @@ class _PublicarAnuncioPageState extends State<PublicarAnuncioPage> {
 
     final anuncioRef = FirebaseDatabase.instance.ref('anuncios').push();
 
-    List<String> imageUrls = [];
-    try {
-      for (int i = 0; i < _imagens.length; i++) {
-        if (_imagens[i] != null) {
-          File imageFile = File(_imagens[i]!.path);
-          String fileName = 'anuncios/${user.uid}/${anuncioRef.key}_$i.jpg';
-          UploadTask uploadTask = FirebaseStorage.instance.ref().child(fileName).putFile(imageFile);
-          TaskSnapshot snapshot = await uploadTask;
-          String downloadUrl = await snapshot.ref.getDownloadURL();
-          imageUrls.add(downloadUrl);
-        }
+    // Guardar imagens como Base64
+    List<String> imageBase64List = [];
+    for (int i = 0; i < _imagens.length; i++) {
+      if (_imagens[i] != null) {
+        File imageFile = File(_imagens[i]!.path);
+        final bytes = await imageFile.readAsBytes();
+        String base64Image = base64Encode(bytes);
+        imageBase64List.add(base64Image);
       }
-    } catch (e) {
-      print("Erro ao fazer upload da imagem para o Storage: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao fazer upload da imagem: ${e.toString()}')),
-      );
-      return; // Stop if image upload fails
     }
 
     try {
@@ -102,14 +101,14 @@ class _PublicarAnuncioPageState extends State<PublicarAnuncioPage> {
         'nome': _nomeController.text.trim(),
         'telefone': _telefoneController.text.trim(),
         'dataPublicacao': dataFormatada,
-        'fotos': imageUrls,
+        'fotos': imageBase64List,
       });
     } catch (e) {
       print("Erro ao guardar anúncio na Realtime Database: $e");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Erro ao guardar anúncio: ${e.toString()}')),
       );
-      return; // Stop if database write fails
+      return;
     }
   }
 
