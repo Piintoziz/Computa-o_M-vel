@@ -1,5 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/analise_dados_page.dart';
+import 'package:flutter_application_1/pages/welcome_page.dart';
+import 'package:flutter_application_1/services/auth_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MenuGestao extends StatelessWidget {
@@ -288,10 +292,6 @@ class _GestaoDrawer extends StatelessWidget {
               label: 'Análise de Dados',
               icon: Icons.bar_chart,
               onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => AnaliseDadosPage())),
-              subItems: [
-                _DrawerSubItem(label: 'Finanças', onTap: () {/* Adicione a rota desejada */}),
-                _DrawerSubItem(label: 'Canais de Vendas', onTap: () {/* Adicione a rota desejada */}),
-              ],
             ),
             _DrawerNavItem(
               label: 'Anúncios',
@@ -303,6 +303,11 @@ class _GestaoDrawer extends StatelessWidget {
               icon: Icons.star,
               onTap: () {/* Adicione a rota desejada */},
             ),
+            _DrawerNavItem(label: "Terminar Sessão", icon: Icons.logout, onTap: () async{
+              AuthService().signOut();
+              await FirebaseAuth.instance.signOut();
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => WelcomePage()));
+            }),
           ],
         ),
       ),

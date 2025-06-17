@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_application_1/pages/message_page.dart';
+import 'package:flutter_application_1/pages/orders_page.dart';
 import 'dart:async';
 
 import 'package:flutter_application_1/pages/start_talking_page.dart';
@@ -184,7 +185,7 @@ class _ContactsPageState extends State<ContactsPage> {
                             trailing: PopupMenuButton(
                               itemBuilder: (BuildContext context) { return [
                                 PopupMenuItem(child: const Text('Enviar mensagem'), onTap: () => _showMessage(context, id, name)),
-                                PopupMenuItem(child: const Text('Encomendas'), onTap: () {/* TODO: Show the orders of this user*/}),
+                                PopupMenuItem(child: const Text('Encomendas'), onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => OrdersPage(customerUid: id)))),
                                 PopupMenuItem(
                                   child: const Text('Apagar'),
                                   onTap: () => _deleteAllMessages(id),

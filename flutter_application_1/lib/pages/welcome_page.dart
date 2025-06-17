@@ -5,18 +5,46 @@ import 'login_page.dart';
 import '../widgets/continue_with_button.dart';
 import '../widgets/primary_button.dart';
 import '../services/auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'home_navigation.dart';
 
-class WelcomePage extends StatelessWidget {
+class WelcomePage extends StatefulWidget {
   WelcomePage({super.key});
-  BuildContext? context;
+
+  @override
+  State<WelcomePage> createState() => _WelcomePageState();
+}
+
+class _WelcomePageState extends State<WelcomePage> {
   final AuthService _authService = AuthService();
+  bool _checkingSession = true;
+
+  @override
+  void initState() {
+    super.initState();
+    // Check if user is already authenticated
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      // Redirect to home page
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const HomeNavigation()),
+        );
+      });
+    } else {
+      setState(() {
+        _checkingSession = false;
+      });
+    }
+  }
 
   void displayLoginPage() {
-    Navigator.push(context!, MaterialPageRoute(builder:(context) => LoginPage()));
+    Navigator.push(context, MaterialPageRoute(builder:(context) => LoginPage()));
   }
 
   void displayCreateAccountPage() {
-    Navigator.push(context!, MaterialPageRoute(builder: (context) => const CreateAccountPage()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const CreateAccountPage()));
   }
 
   void continueWithFacebook() {
@@ -27,22 +55,22 @@ class WelcomePage extends StatelessWidget {
     try {
       final userCredential = await _authService.signInWithGoogle();
       if (userCredential != null) {
-        ScaffoldMessenger.of(context!).showSnackBar(
-        const SnackBar(content: Text('Login com Google realizado com sucesso'))
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Login com Google realizado com sucesso'))
         );
         await FirebaseDatabase.instance.ref('userdata/${userCredential.user?.uid}').set({
           'name': userCredential.user?.displayName ?? '',
           'email': userCredential.user?.email ?? '',
         });
-        Navigator.pushReplacementNamed(context!, '/');
+        // Do not navigate here; let authStateChanges in main.dart handle it
       }
       else {
-        ScaffoldMessenger.of(context!).showSnackBar(
-        const SnackBar(content: Text('Erro ao realizar login com Google'))
-      );
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Erro ao realizar login com Google'))
+        );
       }
     } catch (e) {
-      ScaffoldMessenger.of(context!).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Erro ao realizar login com Google'))
       );
     }
@@ -54,7 +82,11 @@ class WelcomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    this.context = context;
+    if (_checkingSession) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(

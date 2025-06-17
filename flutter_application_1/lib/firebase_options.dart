@@ -67,6 +67,7 @@ class DefaultFirebaseOptions {
     projectId: 'projeto-cm-43e67',
     databaseURL: 'https://projeto-cm-43e67-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'projeto-cm-43e67.firebasestorage.app',
+    iosClientId: '528642462565-oq2d5auc5bkrs5q30q9vjnt3a4pbqbjo.apps.googleusercontent.com',
     iosBundleId: 'com.example.flutterApplication1',
   );
 
@@ -77,6 +78,7 @@ class DefaultFirebaseOptions {
     projectId: 'projeto-cm-43e67',
     databaseURL: 'https://projeto-cm-43e67-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'projeto-cm-43e67.firebasestorage.app',
+    iosClientId: '528642462565-oq2d5auc5bkrs5q30q9vjnt3a4pbqbjo.apps.googleusercontent.com',
     iosBundleId: 'com.example.flutterApplication1',
   );
 
