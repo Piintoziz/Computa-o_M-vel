@@ -15,6 +15,7 @@ import '../pages/gestao_encomendas_emitir_fatura.dart';
 import '../pages/gestao_encomendas_compras_abandonadas.dart';
 import '../pages/analise_dados_page.dart';
 import '../pages/minha_banca_page.dart';
+import '../pages/products_page.dart';
 
 class AppRoutes {
   static const String welcome = '/welcome';
@@ -33,6 +34,7 @@ class AppRoutes {
   static const String analiseDados = '/analise-dados';
   static const String contacts = '/contacts';
   static const String minhaBanca = '/minha-banca';
+  static const String products = '/produtos';
 
   static Map<String, WidgetBuilder> getRoutes() {
     return {
@@ -56,6 +58,7 @@ class AppRoutes {
       analiseDados: (context) => AnaliseDadosPage(),
       contacts: (context) => ContactsPage(),
       minhaBanca: (context) => const MinhaBancaPage(),
+      products: (context) => const ProductsPage(),
     };
   }
 

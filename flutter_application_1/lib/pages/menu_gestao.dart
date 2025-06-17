@@ -281,7 +281,7 @@ class _GestaoDrawer extends StatelessWidget {
             _DrawerNavItem(
               label: 'Produtos',
               icon: Icons.local_grocery_store,
-              onTap: () {/* Adicione a rota desejada */},
+              onTap: () => Navigator.of(context, rootNavigator: true).pushNamed('/produtos'),
             ),
             _DrawerNavItem(
               label: 'Clientes',

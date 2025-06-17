@@ -31,7 +31,7 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF2E7D5A)),
         useMaterial3: true,
       ),
-      initialRoute: AppRoutes.welcome,
+      initialRoute: AppRoutes.login,
       routes: AppRoutes.getRoutes(),
       onGenerateRoute: (settings) {
         if (settings.name == AppRoutes.detalhesEncomenda) {
