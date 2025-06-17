@@ -5,6 +5,7 @@ import 'publicar_anuncio_page.dart';
 import 'gestao_Encomendas.dart';
 import 'menu_gestao.dart';
 import 'menu_principal.dart';
+import 'minha_banca_page.dart';
 
 class HomeNavigation extends StatefulWidget {
   const HomeNavigation({Key? key}) : super(key: key);
@@ -46,6 +47,9 @@ class _HomeNavigationState extends State<HomeNavigation> {
             case AppRoutes.menuGestao:
               page = const MenuGestao();
               break;
+            case AppRoutes.minhaBanca:
+              page = const MinhaBancaPage();
+              break;
             default:
               page = const Center(child: Text('Página não encontrada', style: TextStyle(fontSize: 24)));
           }
@@ -84,7 +88,7 @@ class _HomeNavigationState extends State<HomeNavigation> {
                         _navigatorKey.currentState?.pushNamed(AppRoutes.publicarAnuncio);
                         break;
                       case 3:
-                        // TODO: Implementar navegação para a nova página de perfil quando estiver pronta
+                        _navigatorKey.currentState?.pushNamed(AppRoutes.minhaBanca);                        
                         break;
                       case 4:
                         _navigatorKey.currentState?.pushNamed(AppRoutes.menuGestao);

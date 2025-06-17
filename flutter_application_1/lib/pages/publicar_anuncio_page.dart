@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 
 class PublicarAnuncioPage extends StatefulWidget {
@@ -63,23 +64,53 @@ class _PublicarAnuncioPageState extends State<PublicarAnuncioPage> {
       );
       return;
     }
+
     final anuncioRef = FirebaseDatabase.instance.ref('anuncios').push();
-    await anuncioRef.set({
-      'uid': user.uid,
-      'titulo': _tituloController.text.trim(),
-      'categoria': _categoriaSelecionada,
-      'descricao': _descricaoController.text.trim(),
-      'localizacao': _localizacaoController.text.trim(),
-      'opcaoEntrega': _entregaOptions[_selectedEntrega],
-      'quantidadeMinima': int.tryParse(_quantidadeController.text.trim()) ?? 0,
-      'preco': double.tryParse(_precoController.text.trim().replaceAll(',', '.')) ?? 0.0,
-      'medida': _medidaSelecionada,
-      'campoAdicional': _campoAdicionalController.text.trim(),
-      'nome': _nomeController.text.trim(),
-      'telefone': _telefoneController.text.trim(),
-      'dataPublicacao': dataFormatada,
-      // 'fotos': [...], // Adicionar aqui o upload das imagens se necessário
-    });
+
+    List<String> imageUrls = [];
+    try {
+      for (int i = 0; i < _imagens.length; i++) {
+        if (_imagens[i] != null) {
+          File imageFile = File(_imagens[i]!.path);
+          String fileName = 'anuncios/${user.uid}/${anuncioRef.key}_$i.jpg';
+          UploadTask uploadTask = FirebaseStorage.instance.ref().child(fileName).putFile(imageFile);
+          TaskSnapshot snapshot = await uploadTask;
+          String downloadUrl = await snapshot.ref.getDownloadURL();
+          imageUrls.add(downloadUrl);
+        }
+      }
+    } catch (e) {
+      print("Erro ao fazer upload da imagem para o Storage: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao fazer upload da imagem: ${e.toString()}')),
+      );
+      return; // Stop if image upload fails
+    }
+
+    try {
+      await anuncioRef.set({
+        'uid': user.uid,
+        'titulo': _tituloController.text.trim(),
+        'categoria': _categoriaSelecionada,
+        'descricao': _descricaoController.text.trim(),
+        'localizacao': _localizacaoController.text.trim(),
+        'opcaoEntrega': _entregaOptions[_selectedEntrega],
+        'quantidadeMinima': int.tryParse(_quantidadeController.text.trim()) ?? 0,
+        'preco': double.tryParse(_precoController.text.trim().replaceAll(',', '.')) ?? 0.0,
+        'medida': _medidaSelecionada,
+        'campoAdicional': _campoAdicionalController.text.trim(),
+        'nome': _nomeController.text.trim(),
+        'telefone': _telefoneController.text.trim(),
+        'dataPublicacao': dataFormatada,
+        'fotos': imageUrls,
+      });
+    } catch (e) {
+      print("Erro ao guardar anúncio na Realtime Database: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao guardar anúncio: ${e.toString()}')),
+      );
+      return; // Stop if database write fails
+    }
   }
 
   void _mostrarPreVisualizacao() {
