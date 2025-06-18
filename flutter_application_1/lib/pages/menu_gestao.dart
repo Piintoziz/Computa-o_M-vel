@@ -4,6 +4,7 @@ import 'package:flutter_application_1/pages/analise_dados_page.dart';
 import 'package:flutter_application_1/pages/welcome_page.dart';
 import 'package:flutter_application_1/services/auth_service.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../routes/app_routes.dart';
 
 class MenuGestao extends StatelessWidget {
   const MenuGestao({Key? key}) : super(key: key);
@@ -203,6 +204,52 @@ class MenuGestao extends StatelessWidget {
                 ),
               ),
             ),
+            const SizedBox(height: 10),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(top: 6),
+                  child: Icon(Icons.circle, size: 10, color: Color(0xFF2E7D5A)),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Encontre utilizadores próximos',
+                    style: GoogleFonts.poppins(
+                      fontSize: 15,
+                      color: const Color(0xFF585858),
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 6),
+            Padding(
+              padding: const EdgeInsets.only(left: 18),
+              child: SizedBox(
+                width: 180,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF184D2B),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                  ),
+                  onPressed: () => Navigator.of(context, rootNavigator: true).pushNamed(AppRoutes.maps),
+                  child: Text(
+                    'Ver Mapa',
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ),
+              ),
+            ),
             const SizedBox(height: 18),
             const Divider(thickness: 3, color: Color(0xFF2E7D5A)),
             // Bottom Doubt Section
@@ -286,6 +333,11 @@ class _GestaoDrawer extends StatelessWidget {
               label: 'Clientes',
               icon: Icons.people,
               onTap: () => Navigator.of(context, rootNavigator: true).pushNamed('/contacts'),
+            ),
+            _DrawerNavItem(
+              label: 'Mapa de Utilizadores',
+              icon: Icons.map,
+              onTap: () => Navigator.of(context, rootNavigator: true).pushNamed(AppRoutes.maps),
             ),
             _DrawerNavItem(
               label: 'Análise de Dados',
