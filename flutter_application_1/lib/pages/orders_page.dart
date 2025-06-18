@@ -124,24 +124,24 @@ class _OrderCard extends StatelessWidget {
   List<_OrderStep> get steps {
     if (order.id == '1074') {
       return [
-        _OrderStep(icon: Icons.inventory_2, label: 'Packing', done: true),
-        _OrderStep(icon: Icons.inbox, label: 'Recolha', done: false),
-        _OrderStep(icon: Icons.local_shipping, label: 'Transporte', done: false),
-        _OrderStep(icon: Icons.home, label: 'Entrega', done: false),
+        const _OrderStep(icon: Icons.inventory_2, label: 'Packing', done: true),
+        const _OrderStep(icon: Icons.inbox, label: 'Recolha', done: false),
+        const _OrderStep(icon: Icons.local_shipping, label: 'Transporte', done: false),
+        const _OrderStep(icon: Icons.home, label: 'Entrega', done: false),
       ];
     } else if (order.id == '1073') {
       return [
-        _OrderStep(icon: Icons.inventory_2, label: 'Packing', done: true),
-        _OrderStep(icon: Icons.inbox, label: 'Recolha', done: true),
-        _OrderStep(icon: Icons.local_shipping, label: 'Transporte', done: true),
-        _OrderStep(icon: Icons.cancel, label: 'Entrega', done: false, canceled: true),
+        const _OrderStep(icon: Icons.inventory_2, label: 'Packing', done: true),
+        const _OrderStep(icon: Icons.inbox, label: 'Recolha', done: true),
+        const _OrderStep(icon: Icons.local_shipping, label: 'Transporte', done: true),
+        const _OrderStep(icon: Icons.cancel, label: 'Entrega', done: false, canceled: true),
       ];
     } else if (order.id == '1035') {
       return [
-        _OrderStep(icon: Icons.inventory_2, label: 'Packing', done: true),
-        _OrderStep(icon: Icons.inbox, label: 'Recolha', done: true),
-        _OrderStep(icon: Icons.local_shipping, label: 'Transporte', done: false),
-        _OrderStep(icon: Icons.home, label: 'Entrega', done: false),
+        const _OrderStep(icon: Icons.inventory_2, label: 'Packing', done: true),
+        const _OrderStep(icon: Icons.inbox, label: 'Recolha', done: true),
+        const _OrderStep(icon: Icons.local_shipping, label: 'Transporte', done: false),
+        const _OrderStep(icon: Icons.home, label: 'Entrega', done: false),
       ];
     }
     return [];

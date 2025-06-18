@@ -24,7 +24,7 @@ class _GestaoEncomendasEmitirFaturaPageState extends State<GestaoEncomendasEmiti
     'sigla': 'TD',
   };
 
-  List<Map<String, dynamic>> _artigos = [
+  final List<Map<String, dynamic>> _artigos = [
     {'nome': 'Maçãs', 'quantidade': 5.0, 'unidade': 'kg', 'preco': 4.0},
   ];
 

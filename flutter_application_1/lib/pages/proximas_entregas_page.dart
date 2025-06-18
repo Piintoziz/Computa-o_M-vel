@@ -313,7 +313,7 @@ class _ProximasEntregasPageState extends State<ProximasEntregasPage> {
                         children: [
                           Text('Ordenar'),
                           SizedBox(width: 4),
-                          const Icon(Icons.arrow_drop_down, size: 20),
+                          Icon(Icons.arrow_drop_down, size: 20),
                         ],
                       ),
                     ),

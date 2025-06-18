@@ -231,7 +231,7 @@ class _MinhaBancaPageState extends State<MinhaBancaPage> {
       mainAxisSize: MainAxisSize.min,
       children: List.generate(5, (i) => Icon(
         i < n ? Icons.star : Icons.star_border,
-        color: Color(0xFF2E7D5A),
+        color: const Color(0xFF2E7D5A),
         size: 22,
       )),
     );
@@ -484,11 +484,11 @@ class _MinhaBancaPageState extends State<MinhaBancaPage> {
               padding: const EdgeInsets.only(left: 32, right: 32, bottom: 8),
               child: Row(
                 children: [
-                  Text('4,0', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32)),
+                  const Text('4,0', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32)),
                   const SizedBox(width: 8),
                   _buildStars(4),
                   const SizedBox(width: 8),
-                  Text('(70 Avaliações)', style: TextStyle(color: Colors.black54)),
+                  const Text('(70 Avaliações)', style: TextStyle(color: Colors.black54)),
                 ],
               ),
             ),

@@ -26,7 +26,7 @@ class ProductsPage extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
-            SizedBox(height: 2),
+            const SizedBox(height: 2),
             Text(
               'Tudo num só lugar!',
               style: GoogleFonts.poppins(
@@ -68,7 +68,7 @@ class ProductsPage extends StatelessWidget {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 childAspectRatio: 0.7,
-                children: [
+                children: const [
                   _ProductPresetCard(
                     image: 'https://images.unsplash.com/photo-1502741338009-cac2772e18bc',
                     name: 'Tomates\nfresco &\norgânicos',
@@ -147,6 +147,7 @@ class ProductsPage extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
+                  // ignore: deprecated_member_use
                   color: const Color(0xFF2E7D5A).withOpacity(0.12),
                   borderRadius: BorderRadius.circular(16),
                 ),
@@ -161,7 +162,7 @@ class ProductsPage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Row(
+                    const Row(
                       children: [
                         _BasketProductChip(
                           image: 'https://images.unsplash.com/photo-1502741338009-cac2772e18bc',
@@ -218,7 +219,7 @@ class ProductsPage extends StatelessWidget {
               Center(
                 child: Column(
                   children: [
-                    Icon(Icons.question_answer, size: 48, color: Colors.black54),
+                    const Icon(Icons.question_answer, size: 48, color: Colors.black54),
                     const SizedBox(height: 8),
                     Text(
                       'Alguma Dúvida?',

@@ -41,8 +41,8 @@ class _GestaoEncomendasComprasAbandonadasPageState extends State<GestaoEncomenda
     },
   ];
 
-  String _ordenarPor = 'Ordenar';
-  String _filtro = 'Filtrar';
+  final String _ordenarPor = 'Ordenar';
+  final String _filtro = 'Filtrar';
 
   @override
   Widget build(BuildContext context) {

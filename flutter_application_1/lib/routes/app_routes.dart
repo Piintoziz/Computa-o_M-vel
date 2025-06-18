@@ -58,7 +58,7 @@ class AppRoutes {
       gestaoEncomendasEmitirFatura: (context) => const GestaoEncomendasEmitirFaturaPage(),
       gestaoEncomendasComprasAbandonadas: (context) => const GestaoEncomendasComprasAbandonadasPage(),
       analiseDados: (context) => AnaliseDadosPage(),
-      contacts: (context) => ContactsPage(),
+      contacts: (context) => const ContactsPage(),
       minhaBanca: (context) => const MinhaBancaPage(),
       products: (context) => const ProductsPage(),
       maps: (context) => const MapsPage(),
