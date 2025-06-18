@@ -207,18 +207,6 @@ class _MinhaBancaPageState extends State<MinhaBancaPage> {
     });
   }
 
-  Widget _infoRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('$label: ', style: const TextStyle(fontWeight: FontWeight.bold)),
-          Expanded(child: Text(value)),
-        ],
-      ),
-    );
-  }
 
   Widget _divider() => const Divider(height: 18, thickness: 0.7);
 
