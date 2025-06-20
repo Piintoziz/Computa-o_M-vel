@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/routes/app_routes.dart';
 import 'package:intl/intl.dart';
 import '../models/item_encomenda.dart';
 
@@ -45,7 +46,9 @@ class DetalhesEncomendaPage extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.settings, color: Colors.white),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, AppRoutes.definicoes);
+            },
           ),
         ],
       ),

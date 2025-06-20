@@ -36,7 +36,9 @@ class MainMenu extends StatelessWidget {
                   const SizedBox(width: 8),
                   IconButton(
                     icon: const Icon(Icons.settings, color: Colors.white, size: 32),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, AppRoutes.definicoes);
+                    },
                   ),
                 ],
               ),

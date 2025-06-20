@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import '../routes/app_routes.dart';
+
 
 class GestaoEncomendasEmitirFaturaPage extends StatefulWidget {
   const GestaoEncomendasEmitirFaturaPage({Key? key}) : super(key: key);
@@ -85,7 +87,9 @@ class _GestaoEncomendasEmitirFaturaPageState extends State<GestaoEncomendasEmiti
         actions: [
           IconButton(
             icon: const Icon(Icons.settings, color: Colors.white),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, AppRoutes.definicoes);
+            },
           ),
         ],
       ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../routes/app_routes.dart';
+
 
 class GestaoEncomendasComprasAbandonadasPage extends StatefulWidget {
   const GestaoEncomendasComprasAbandonadasPage({Key? key}) : super(key: key);
@@ -65,7 +67,9 @@ class _GestaoEncomendasComprasAbandonadasPageState extends State<GestaoEncomenda
         actions: [
           IconButton(
             icon: const Icon(Icons.settings, color: Colors.white),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, AppRoutes.definicoes);
+            },
           ),
         ],
       ),

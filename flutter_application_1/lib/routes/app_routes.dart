@@ -18,6 +18,14 @@ import '../pages/minha_banca_page.dart';
 import '../pages/products_page.dart';
 import '../pages/maps_page.dart';
 
+import '../pages/definicoes.dart';
+import '../pages/definicoesConta.dart';
+import '../pages/definicoesNotificações.dart';
+import '../pages/definicoesPagamento.dart';
+import '../pages/definicoesFaturação.dart';
+import '../pages/definicoesGeral.dart';
+import '../pages/definicoesLogistica.dart';
+
 class AppRoutes {
   static const String welcome = '/welcome';
   static const String login = '/login';
@@ -37,6 +45,14 @@ class AppRoutes {
   static const String minhaBanca = '/minha-banca';
   static const String products = '/produtos';
   static const String maps = '/maps';
+  
+  static const String definicoes = '/definicoes';
+  static const String definicoesConta = '/definicoes-conta';
+  static const String definicoesNotificacoes = '/definicoes-notificacoes';
+  static const String definicoesPagamento = '/definicoes-pagamento';
+  static const String definicoesFaturacao = '/definicoes-faturacao';
+  static const String definicoesGeral = '/definicoes-geral';
+  static const String definicoesLogistica = '/definicoes-logistica';
 
   static Map<String, WidgetBuilder> getRoutes() {
     return {
@@ -62,6 +78,14 @@ class AppRoutes {
       minhaBanca: (context) => const MinhaBancaPage(),
       products: (context) => const ProductsPage(),
       maps: (context) => const MapsPage(),
+
+      definicoes: (context) => const DefinicoesPage(),
+      definicoesConta: (context) => const DefinicoesContaPage(),
+      definicoesNotificacoes: (context) => const DefinicoesNotificacoesPage(),
+      definicoesPagamento: (context) => const DefinicoesPagamentoPage(),
+      definicoesFaturacao: (context) => const DefinicoesFaturacaoPage(),
+      definicoesGeral: (context) => const DefinicoesGeralPage(),
+      definicoesLogistica: (context) => const DefinicoesLogisticaPage(),
     };
   }
 

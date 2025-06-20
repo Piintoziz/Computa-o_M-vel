@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/relatorio_analise_dados_page.dart';
+import '../routes/app_routes.dart';
+
 
 class AnaliseDadosPage extends StatelessWidget {
   // Hardcoded data (to be replaced by DB later)
@@ -56,7 +58,9 @@ class AnaliseDadosPage extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.settings, color: Colors.white),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, AppRoutes.definicoes);  
+            },
           ),
         ],
       ),

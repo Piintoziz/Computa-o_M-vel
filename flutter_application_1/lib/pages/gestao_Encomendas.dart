@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'detalhes_encomenda_page.dart';
 import '../models/item_encomenda.dart';
+import '../routes/app_routes.dart';
+
 
 class Encomenda {
   final String id;
@@ -241,7 +243,9 @@ class _GestaoEncomendasPageState extends State<GestaoEncomendasPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.settings, color: Colors.white),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, AppRoutes.definicoes);
+            },
           ),
         ],
       ),

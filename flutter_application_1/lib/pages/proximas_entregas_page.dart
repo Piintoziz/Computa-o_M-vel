@@ -225,7 +225,9 @@ class _ProximasEntregasPageState extends State<ProximasEntregasPage> {
           ),
           IconButton(
             icon: const Icon(Icons.settings, color: Colors.white, size: 30),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, AppRoutes.definicoes);
+            },
           ),
         ],
       ),

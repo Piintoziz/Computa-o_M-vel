@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/routes/app_routes.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ProductsPage extends StatelessWidget {
@@ -41,7 +42,9 @@ class ProductsPage extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.settings, color: Colors.white),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, AppRoutes.definicoes);
+            },
           ),
         ],
       ),

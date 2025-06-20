@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/pages/definicoesConta.dart';
+import 'package:flutter_application_1/pages/definicoesFatura%C3%A7%C3%A3o.dart';
+import 'package:flutter_application_1/pages/definicoesGeral.dart';
+import 'package:flutter_application_1/pages/definicoesLogistica.dart';
+import 'package:flutter_application_1/pages/definicoesNotifica%C3%A7%C3%B5es.dart';
+import 'package:flutter_application_1/pages/definicoesPagamento.dart';
 import '../routes/app_routes.dart';
 import 'proximas_entregas_page.dart';
 import 'publicar_anuncio_page.dart';
@@ -6,6 +12,7 @@ import 'gestao_Encomendas.dart';
 import 'menu_gestao.dart';
 import 'menu_principal.dart';
 import 'minha_banca_page.dart';
+import 'definicoes.dart';
 
 class HomeNavigation extends StatefulWidget {
   const HomeNavigation({Key? key}) : super(key: key);
@@ -49,6 +56,27 @@ class _HomeNavigationState extends State<HomeNavigation> {
               break;
             case AppRoutes.minhaBanca:
               page = const MinhaBancaPage();
+              break;
+            case AppRoutes.definicoes:
+              page = const DefinicoesPage();
+              break;
+            case AppRoutes.definicoesConta:
+              page = const DefinicoesContaPage();
+              break;
+            case AppRoutes.definicoesNotificacoes:
+              page = const DefinicoesNotificacoesPage();
+              break;
+            case AppRoutes.definicoesFaturacao:
+              page = const DefinicoesFaturacaoPage();
+              break;
+            case AppRoutes.definicoesGeral:
+              page = const DefinicoesGeralPage();
+              break;
+            case AppRoutes.definicoesLogistica:
+              page = const DefinicoesLogisticaPage();
+              break;
+            case AppRoutes.definicoesPagamento:
+              page = const DefinicoesPagamentoPage();
               break;
             default:
               page = const Center(child: Text('Página não encontrada', style: TextStyle(fontSize: 24)));
