@@ -28,11 +28,7 @@ class MenuGestao extends StatelessWidget {
           children: [
             Text(
               'Gestão',
-              style: GoogleFonts.poppins(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28, color: Colors.white),
             ),
             Text(
               'Tudo num só lugar!',
@@ -269,20 +265,20 @@ class MenuGestao extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    'Alguma Dúvida?',
-                    style: GoogleFonts.lilitaOne(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 32,
-                      color: const Color.fromARGB(255, 0, 0, 0),
-                      shadows: const [
-                        Shadow(
-                          offset: Offset(2, 2),
-                          blurRadius: 2,
-                          color: Colors.black26,
-                        ),
-                      ],
+                      'Alguma Dúvida?',
+                      style: GoogleFonts.lilitaOne(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 32,
+                        color: Colors.black,
+                        shadows: const [
+                          Shadow(
+                            offset: Offset(2, 2),
+                            blurRadius: 2,
+                            color: Colors.black26,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
                   const SizedBox(height: 8),
                   TextButton(
                     onPressed: () {},

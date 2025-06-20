@@ -422,17 +422,26 @@ class _ProximasEntregasPageState extends State<ProximasEntregasPage> {
               const SizedBox(height: 16),
               Column(
                 children: [
-                  const Icon(Icons.question_answer_outlined, size: 48, color: Colors.black54),
-                  const SizedBox(height: 8),
+Image.asset(
+                      'assets/images/doubt_icon.png',
+                      height: 60,
+                    ),                  const SizedBox(height: 8),
+                  
                   Text(
-                    'Alguma Dúvida?',
-                    style: GoogleFonts.lilitaOne(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24,
-                      color: Colors.black87,
-                      shadows: [const Shadow(color: Colors.black12, offset: Offset(1,1), blurRadius: 2)],
+                      'Alguma Dúvida?',
+                      style: GoogleFonts.lilitaOne(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 32,
+                        color: Colors.black,
+                        shadows: const [
+                          Shadow(
+                            offset: Offset(2, 2),
+                            blurRadius: 2,
+                            color: Colors.black26,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
                   const SizedBox(height: 4),
                   const Text(
                     'Entre em contacto connosco!',

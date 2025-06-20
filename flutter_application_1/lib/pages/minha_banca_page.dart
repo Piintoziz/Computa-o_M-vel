@@ -248,7 +248,8 @@ class _MinhaBancaPageState extends State<MinhaBancaPage> {
           onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
-        title: const Text('Minha Banca', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22, color: Colors.white)),
+        title: const Text('Minha Banca',           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28, color: Colors.white),
+),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
