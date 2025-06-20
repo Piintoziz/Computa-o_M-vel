@@ -130,67 +130,6 @@ class MainMenu extends StatelessWidget {
               const Divider(thickness: 3, color: Color(0xFF2E7D5A)),
               const SizedBox(height: 24),
               
-              // Maps section
-              Center(
-                child: Column(
-                  children: [
-                    Container(
-                      width: 200,
-                      height: 60,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF2E7D5A),
-                        borderRadius: BorderRadius.circular(30),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.black26,
-                            offset: Offset(2, 2),
-                            blurRadius: 4,
-                          ),
-                        ],
-                      ),
-                      child: Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(30),
-                          onTap: () {
-                            Navigator.pushNamed(context, AppRoutes.maps);
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.map,
-                                color: Colors.white,
-                                size: 28,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                'Ver Mapa',
-                                style: GoogleFonts.lilitaOne(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Encontre utilizadores próximos',
-                      style: GoogleFonts.lilitaOne(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                        color: const Color(0xFF585858),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
-              
               // Alguma Dúvida section
               Center(
                 child: Column(

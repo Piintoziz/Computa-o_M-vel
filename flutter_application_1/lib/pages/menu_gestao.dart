@@ -52,7 +52,9 @@ class MenuGestao extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.settings, color: Colors.white, size: 28),
-            onPressed: () {},
+            onPressed: () {
+                      Navigator.pushNamed(context, AppRoutes.definicoes);
+            },
           ),
         ],
       ),
@@ -146,7 +148,9 @@ class MenuGestao extends StatelessWidget {
                     ),
                     padding: const EdgeInsets.symmetric(vertical: 8),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                      Navigator.pushNamed(context, AppRoutes.minhaBanca);
+                  },
                   child: Text(
                     'Ir para a Minha Banca',
                     style: GoogleFonts.poppins(
@@ -192,7 +196,9 @@ class MenuGestao extends StatelessWidget {
                     ),
                     padding: const EdgeInsets.symmetric(vertical: 8),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                      Navigator.pushNamed(context, AppRoutes.publicarAnuncio);
+                  },
                   child: Text(
                     'Criar novo anúncio',
                     style: GoogleFonts.poppins(
