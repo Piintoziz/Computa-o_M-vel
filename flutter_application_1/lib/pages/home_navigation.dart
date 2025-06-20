@@ -6,6 +6,7 @@ import 'package:flutter_application_1/pages/definicoesLogistica.dart';
 import 'package:flutter_application_1/pages/definicoesNotifica%C3%A7%C3%B5es.dart';
 import 'package:flutter_application_1/pages/definicoesPagamento.dart';
 import '../routes/app_routes.dart';
+import '../widgets/shake_detector_mixin.dart';
 import 'proximas_entregas_page.dart';
 import 'publicar_anuncio_page.dart';
 import 'gestao_Encomendas.dart';
@@ -21,7 +22,7 @@ class HomeNavigation extends StatefulWidget {
   State<HomeNavigation> createState() => _HomeNavigationState();
 }
 
-class _HomeNavigationState extends State<HomeNavigation> {
+class _HomeNavigationState extends State<HomeNavigation> with ShakeDetectorMixin {
   int _selectedIndex = 0;
   final _navigatorKey = GlobalKey<NavigatorState>();
 

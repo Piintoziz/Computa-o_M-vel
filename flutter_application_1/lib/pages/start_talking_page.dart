@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_application_1/pages/message_page.dart';
+import 'package:flutter_application_1/widgets/shake_detector_mixin.dart';
 
 class StartTalkingPage extends StatefulWidget {
   const StartTalkingPage({super.key});
@@ -10,7 +11,7 @@ class StartTalkingPage extends StatefulWidget {
   State<StartTalkingPage> createState() => _StartTalkingPageState();
 }
 
-class _StartTalkingPageState extends State<StartTalkingPage> {
+class _StartTalkingPageState extends State<StartTalkingPage> with ShakeDetectorMixin {
   final TextEditingController _searchController = TextEditingController();
   List<Map<String, dynamic>> _searchResults = [];
   bool _isLoading = false;

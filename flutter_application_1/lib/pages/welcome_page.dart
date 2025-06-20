@@ -4,6 +4,7 @@ import 'create_account_page.dart';
 import 'login_page.dart';
 import '../widgets/continue_with_button.dart';
 import '../widgets/primary_button.dart';
+import '../widgets/shake_detector_mixin.dart';
 import '../services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'home_navigation.dart';
@@ -15,7 +16,7 @@ class WelcomePage extends StatefulWidget {
   State<WelcomePage> createState() => _WelcomePageState();
 }
 
-class _WelcomePageState extends State<WelcomePage> {
+class _WelcomePageState extends State<WelcomePage> with ShakeDetectorMixin {
   final AuthService _authService = AuthService();
   bool _checkingSession = true;
 
