@@ -77,7 +77,14 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   void continueWithApple() {
-    //TODO: Implementar autenticação com apple
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('O login com a Apple não se encontra disponível de momento, aplicação otimizada para Android.'),
+        backgroundColor: Colors.black87,
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.all(16),
+      ),
+    );
   }
 
   @override

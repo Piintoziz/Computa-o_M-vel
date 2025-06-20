@@ -41,6 +41,10 @@
 			<string>UIInterfaceOrientationLandscapeLeft</string>
 			<string>UIInterfaceOrientationLandscapeRight</string>
 		</array>
+		<key>NSCameraUsageDescription</key>
+		<string>A sua app precisa de acesso à câmara para tirar fotos para os anúncios.</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>A sua app precisa de acesso à galeria para escolher fotos para os anúncios.</string>
 		<key>CADisableMinimumFrameDurationOnPhone</key>
 		<true/>
 		<key>UIApplicationSupportsIndirectInputEvents</key>

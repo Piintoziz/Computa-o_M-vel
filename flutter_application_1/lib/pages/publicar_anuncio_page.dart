@@ -11,7 +11,14 @@ import 'dart:convert';
 class PublicarAnuncioPage extends StatefulWidget {
   final VoidCallback? onPublishSuccess;
   final VoidCallback? onBackToIndex;
-  const PublicarAnuncioPage({Key? key, this.onPublishSuccess, this.onBackToIndex}) : super(key: key);
+  final Map<String, dynamic>? anuncioParaEditar;
+
+  const PublicarAnuncioPage({
+    Key? key,
+    this.onPublishSuccess,
+    this.onBackToIndex,
+    this.anuncioParaEditar,
+  }) : super(key: key);
 
   @override
   State<PublicarAnuncioPage> createState() => _PublicarAnuncioPageState();
@@ -42,11 +49,41 @@ class _PublicarAnuncioPageState extends State<PublicarAnuncioPage> {
 
   bool _isPickingImage = false;
 
-  Future<void> _pickImage(int index) async {
+  @override
+  void initState() {
+    super.initState();
+    if (widget.anuncioParaEditar != null) {
+      _preencherCamposParaEdicao();
+    }
+  }
+
+  void _preencherCamposParaEdicao() {
+    final data = widget.anuncioParaEditar!;
+    _tituloController.text = data['titulo'] ?? '';
+    _categoriaSelecionada = (data['categoria'] as String?)?.trim();
+    _descricaoController.text = data['descricao'] ?? '';
+    _localizacaoController.text = data['localizacao'] ?? '';
+    _quantidadeController.text = data['quantidadeMinima']?.toString() ?? '';
+    _precoController.text = data['preco']?.toString() ?? '';
+    _medidaSelecionada = data['medida'];
+    _campoAdicionalController.text = data['campoAdicional'] ?? '';
+    _nomeController.text = data['nome'] ?? '';
+    _telefoneController.text = data['telefone'] ?? '';
+
+    final entrega = data['opcaoEntrega'];
+    if (entrega != null) {
+      final index = _entregaOptions.indexOf(entrega);
+      if (index != -1) {
+        _selectedEntrega = index;
+      }
+    }
+  }
+
+  Future<void> _pickImage(int index, ImageSource source) async {
     if (_isPickingImage) return;
     _isPickingImage = true;
     try {
-      final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+      final XFile? pickedFile = await _picker.pickImage(source: source);
       if (pickedFile != null) {
         setState(() {
           _imagens[index] = pickedFile;
@@ -55,6 +92,36 @@ class _PublicarAnuncioPageState extends State<PublicarAnuncioPage> {
     } finally {
       _isPickingImage = false;
     }
+  }
+
+  void _showImageSourceActionSheet(int index) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return SafeArea(
+          child: Wrap(
+            children: <Widget>[
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Galeria'),
+                onTap: () {
+                  _pickImage(index, ImageSource.gallery);
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_camera),
+                title: const Text('Câmara'),
+                onTap: () {
+                  _pickImage(index, ImageSource.camera);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   void _removeImage(int index) {
@@ -72,42 +139,61 @@ class _PublicarAnuncioPageState extends State<PublicarAnuncioPage> {
       return;
     }
 
-    final anuncioRef = FirebaseDatabase.instance.ref('anuncios').push();
-
-    // Guardar imagens como Base64
     List<String> imageBase64List = [];
-    for (int i = 0; i < _imagens.length; i++) {
-      if (_imagens[i] != null) {
-        File imageFile = File(_imagens[i]!.path);
-        final bytes = await imageFile.readAsBytes();
-        String base64Image = base64Encode(bytes);
-        imageBase64List.add(base64Image);
+    bool newImagesSelected = _imagens.any((img) => img != null);
+    if (newImagesSelected) {
+      for (int i = 0; i < _imagens.length; i++) {
+        if (_imagens[i] != null) {
+          File imageFile = File(_imagens[i]!.path);
+          final bytes = await imageFile.readAsBytes();
+          imageBase64List.add(base64Encode(bytes));
+        }
       }
+    } else if (widget.anuncioParaEditar != null) {
+      imageBase64List = List<String>.from(widget.anuncioParaEditar!['fotos'] ?? []);
     }
+    
+    final dataToSave = {
+      'uid': user.uid,
+      'titulo': _tituloController.text.trim(),
+      'categoria': _categoriaSelecionada,
+      'descricao': _descricaoController.text.trim(),
+      'localizacao': _localizacaoController.text.trim(),
+      'opcaoEntrega': _entregaOptions[_selectedEntrega],
+      'quantidadeMinima': int.tryParse(_quantidadeController.text.trim()) ?? 0,
+      'preco': double.tryParse(_precoController.text.trim().replaceAll(',', '.')) ?? 0.0,
+      'medida': _medidaSelecionada,
+      'campoAdicional': _campoAdicionalController.text.trim(),
+      'nome': _nomeController.text.trim(),
+      'telefone': _telefoneController.text.trim(),
+      'dataPublicacao': widget.anuncioParaEditar != null
+          ? widget.anuncioParaEditar!['dataPublicacao']
+          : dataFormatada,
+      'fotos': imageBase64List,
+    };
 
     try {
-      await anuncioRef.set({
-        'uid': user.uid,
-        'titulo': _tituloController.text.trim(),
-        'categoria': _categoriaSelecionada,
-        'descricao': _descricaoController.text.trim(),
-        'localizacao': _localizacaoController.text.trim(),
-        'opcaoEntrega': _entregaOptions[_selectedEntrega],
-        'quantidadeMinima': int.tryParse(_quantidadeController.text.trim()) ?? 0,
-        'preco': double.tryParse(_precoController.text.trim().replaceAll(',', '.')) ?? 0.0,
-        'medida': _medidaSelecionada,
-        'campoAdicional': _campoAdicionalController.text.trim(),
-        'nome': _nomeController.text.trim(),
-        'telefone': _telefoneController.text.trim(),
-        'dataPublicacao': dataFormatada,
-        'fotos': imageBase64List,
-      });
+      if (widget.anuncioParaEditar != null) {
+        final anuncioId = widget.anuncioParaEditar!['id'];
+        await FirebaseDatabase.instance.ref('anuncios/$anuncioId').update(dataToSave);
+      } else {
+        await FirebaseDatabase.instance.ref('anuncios').push().set(dataToSave);
+      }
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(widget.anuncioParaEditar != null ? 'Anúncio atualizado!' : 'Anúncio publicado!'),
+            backgroundColor: const Color(0xFF2E7D5A),
+          ),
+        );
+        widget.onPublishSuccess?.call();
+      }
     } catch (e) {
       print("Erro ao guardar anúncio na Realtime Database: $e");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Erro ao guardar anúncio: ${e.toString()}')),
       );
-      return;
     }
   }
 
@@ -198,13 +284,12 @@ class _PublicarAnuncioPageState extends State<PublicarAnuncioPage> {
             }
           },
         ),
-        title: const Text(
-          'Publicar anúncio',
-          style: TextStyle(
+        title: Text(
+          widget.anuncioParaEditar != null ? 'Editar Anúncio' : 'Publicar anúncio',
+          style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
-            fontFamily: 'Poppins',
-            fontSize: 28,
+            fontSize: 22,
           ),
         ),
         centerTitle: true,
@@ -219,7 +304,7 @@ class _PublicarAnuncioPageState extends State<PublicarAnuncioPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: List.generate(3, (index) => Expanded(
                   child: GestureDetector(
-                    onTap: () => _pickImage(index),
+                    onTap: () => _showImageSourceActionSheet(index),
                     child: Container(
                       margin: EdgeInsets.only(right: index < 2 ? 8 : 0),
                       height: 90,
@@ -287,7 +372,7 @@ class _PublicarAnuncioPageState extends State<PublicarAnuncioPage> {
                 value: _categoriaSelecionada,
                 onChanged: (v) => setState(() => _categoriaSelecionada = v),
                 decoration: InputDecoration(
-                  hintText: '      Categoria',
+                  hintText: 'Categoria',
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Colors.grey)),
                   enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Colors.grey)),
                   focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Color(0xFF2E7D5A))),
@@ -303,7 +388,7 @@ class _PublicarAnuncioPageState extends State<PublicarAnuncioPage> {
                   height: 1.2,
                 ),
                 items: [
-                  '      Frutas', '      Legumes', '      Laticínios', '      Outros'
+                  'Frutas', 'Legumes', 'Laticínios', 'Outros'
                 ].map((cat) => DropdownMenuItem(value: cat, child: Center(child: Text(cat)))).toList(),
               ),
               const SizedBox(height: 12),
@@ -565,17 +650,7 @@ class _PublicarAnuncioPageState extends State<PublicarAnuncioPage> {
                           _telefoneController.text.trim().isNotEmpty;
                         if (camposValidos) {
                           await publicarAnuncio();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Anúncio publicado com sucesso!'),
-                              backgroundColor: Color(0xFF2E7D5A),
-                              duration: Duration(milliseconds: 1500),
-                            ),
-                          );
                           await Future.delayed(const Duration(milliseconds: 1500));
-                          if (widget.onPublishSuccess != null) {
-                            widget.onPublishSuccess!();
-                          }
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -591,7 +666,7 @@ class _PublicarAnuncioPageState extends State<PublicarAnuncioPage> {
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                         padding: const EdgeInsets.symmetric(vertical: 14),
                       ),
-                      child: const Text('Publicar'),
+                      child: Text(widget.anuncioParaEditar != null ? 'Guardar' : 'Publicar'),
                     ),
                   ),
                 ],

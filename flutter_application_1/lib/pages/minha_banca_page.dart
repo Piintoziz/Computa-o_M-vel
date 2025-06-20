@@ -4,6 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'publicar_anuncio_page.dart'; // Importar a página de publicar anúncio
 
 class MinhaBancaPage extends StatefulWidget {
   const MinhaBancaPage({Key? key}) : super(key: key);
@@ -133,67 +134,24 @@ class _MinhaBancaPageState extends State<MinhaBancaPage> {
     final anuncioRef = FirebaseDatabase.instance.ref('anuncios/$anuncioId');
     final snapshot = await anuncioRef.get();
     if (!snapshot.exists) return;
+
     final data = Map<String, dynamic>.from(snapshot.value as Map);
+    data['id'] = anuncioId; // Garantir que o ID está no mapa
 
-    final TextEditingController tituloController = TextEditingController(text: data['titulo'] ?? '');
-    final TextEditingController categoriaController = TextEditingController(text: data['categoria'] ?? '');
-    final TextEditingController descricaoController = TextEditingController(text: data['descricao'] ?? '');
-    final TextEditingController localizacaoController = TextEditingController(text: data['localizacao'] ?? '');
-    final TextEditingController medidaController = TextEditingController(text: data['medida'] ?? '');
-    final TextEditingController nomeController = TextEditingController(text: data['nome'] ?? '');
-    final TextEditingController opcaoEntregaController = TextEditingController(text: data['opcaoEntrega'] ?? '');
-    final TextEditingController precoController = TextEditingController(text: data['preco']?.toString() ?? '');
-    final TextEditingController quantidadeMinimaController = TextEditingController(text: data['quantidadeMinima']?.toString() ?? '');
-    final TextEditingController telefoneController = TextEditingController(text: data['telefone'] ?? '');
-
-    await showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Editar Anúncio'),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
-                TextField(controller: tituloController, decoration: const InputDecoration(labelText: 'Título')),
-                TextField(controller: categoriaController, decoration: const InputDecoration(labelText: 'Categoria')),
-                TextField(controller: descricaoController, decoration: const InputDecoration(labelText: 'Descrição')),
-                TextField(controller: localizacaoController, decoration: const InputDecoration(labelText: 'Localização')),
-                TextField(controller: medidaController, decoration: const InputDecoration(labelText: 'Medida')),
-                TextField(controller: nomeController, decoration: const InputDecoration(labelText: 'Nome')),
-                TextField(controller: opcaoEntregaController, decoration: const InputDecoration(labelText: 'Opção de Entrega')),
-                TextField(controller: precoController, decoration: const InputDecoration(labelText: 'Preço')),
-                TextField(controller: quantidadeMinimaController, decoration: const InputDecoration(labelText: 'Quantidade Mínima')),
-                TextField(controller: telefoneController, decoration: const InputDecoration(labelText: 'Telefone')),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cancelar'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                await anuncioRef.update({
-                  'titulo': tituloController.text.trim(),
-                  'categoria': categoriaController.text.trim(),
-                  'descricao': descricaoController.text.trim(),
-                  'localizacao': localizacaoController.text.trim(),
-                  'medida': medidaController.text.trim(),
-                  'nome': nomeController.text.trim(),
-                  'opcaoEntrega': opcaoEntregaController.text.trim(),
-                  'preco': double.tryParse(precoController.text.replaceAll(',', '.')) ?? 0.0,
-                  'quantidadeMinima': int.tryParse(quantidadeMinimaController.text) ?? 0,
-                  'telefone': telefoneController.text.trim(),
-                });
-                Navigator.of(context).pop();
-                _carregarAnuncios();
-              },
-              child: const Text('Guardar'),
-            ),
-          ],
-        );
-      },
+    // Navegar para a PublicarAnuncioPage para edição
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => PublicarAnuncioPage(
+          anuncioParaEditar: data,
+          onPublishSuccess: () {
+            Navigator.of(context).pop();
+            _carregarAnuncios();
+          },
+          onBackToIndex: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ),
     );
   }
 
