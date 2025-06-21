@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'dart:convert';
 import '../routes/app_routes.dart';
 import '../widgets/shake_detector_mixin.dart';
 
@@ -11,6 +13,73 @@ class MainMenu extends StatefulWidget {
 }
 
 class _MainMenuState extends State<MainMenu> with ShakeDetectorMixin {
+  List<Map<String, dynamic>> _anuncios = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _carregarAnuncios();
+  }
+
+  Future<void> _carregarAnuncios() async {
+    try {
+      // 1. Vai buscar TODOS os anúncios, em vez de apenas os 3 primeiros
+      final ref = FirebaseDatabase.instance.ref('anuncios');
+      final snapshot = await ref.get();
+      final List<Map<String, dynamic>> todosAnuncios = [];
+
+      if (snapshot.exists && snapshot.value != null) {
+        if (snapshot.value is Map) {
+          final data = Map<Object?, Object?>.from(snapshot.value as Map);
+          for (var entry in data.entries) {
+            final key = entry.key;
+            final value = entry.value;
+
+            if (key is String && value is Map) {
+              final anuncioData = Map<String, dynamic>.from(value);
+              final fotos = anuncioData['fotos'];
+              String? imagemUrl;
+              if (fotos is List && fotos.isNotEmpty && fotos[0] is String) {
+                imagemUrl = fotos[0];
+              }
+
+              todosAnuncios.add({
+                'id': key,
+                'titulo': anuncioData['titulo']?.toString() ?? 'Sem título',
+                'preco': (anuncioData['preco'] as num?)?.toDouble() ?? 0.0,
+                'medida': anuncioData['medida']?.toString() ?? '',
+                'localizacao': anuncioData['localizacao']?.toString() ?? 'Sem localização',
+                'imagem': imagemUrl,
+              });
+            }
+          }
+        } else {
+          print("ALERTA: Os dados dos anúncios não vieram no formato esperado de Mapa.");
+        }
+      }
+
+      // 2. Baralha a lista e seleciona 3 aleatoriamente
+      todosAnuncios.shuffle();
+      final anunciosAleatorios = todosAnuncios.take(3).toList();
+
+      if (mounted) {
+        setState(() {
+          _anuncios = anunciosAleatorios;
+          _isLoading = false;
+        });
+      }
+    } catch (e, stacktrace) {
+      print('Erro ao carregar anúncios: $e');
+      print('Stacktrace: $stacktrace');
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,40 +144,7 @@ class _MainMenuState extends State<MainMenu> with ShakeDetectorMixin {
                 ),
               ),
               const SizedBox(height: 8),
-              // Top row with two products
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _ProductCard(
-                    imageUrl: 'https://images.unsplash.com/photo-1502741338009-cac2772e18bc',
-                    price: '4.00€/Kg',
-                    title: 'Tomates fresco & orgânicos',
-                    location: 'Almada',
-                    size: 110,
-                  ),
-                  _ProductCard(
-                    imageUrl: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308',
-                    price: '1.500€',
-                    title: 'Máquina Agrícola',
-                    location: 'Montijo',
-                    size: 110,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              // Bottom row with one product centered
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _ProductCard(
-                    imageUrl: 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca',
-                    price: '2.00€/Kg',
-                    title: 'Batatas frescas & orgânicas',
-                    location: 'Alentejo',
-                    size: 110,
-                  ),
-                ],
-              ),
+              _buildRecomendados(),
               const SizedBox(height: 12),
               Center(
                 child: Column(
@@ -182,10 +218,73 @@ class _MainMenuState extends State<MainMenu> with ShakeDetectorMixin {
       ),
     );
   }
+
+  Widget _buildRecomendados() {
+    if (_isLoading) {
+      return const Center(child: Padding(
+        padding: EdgeInsets.all(32.0),
+        child: CircularProgressIndicator(),
+      ));
+    }
+
+    if (_anuncios.isEmpty) {
+      return const Center(child: Text('De momento, não há anúncios para recomendar.'));
+    }
+
+    // Formatar o preço para exibição
+    String formatPrice(Map<String, dynamic> anuncio) {
+      final price = anuncio['preco'];
+      final medida = anuncio['medida'];
+      if (medida != null && medida.isNotEmpty && medida != 'Unidade') {
+        return '${price.toStringAsFixed(2)}€/$medida';
+      }
+      return '${price.toStringAsFixed(2)}€';
+    }
+
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            if (_anuncios.length > 0)
+              _ProductCard(
+                imageUrl: _anuncios[0]['imagem'],
+                price: formatPrice(_anuncios[0]),
+                title: _anuncios[0]['titulo'],
+                location: _anuncios[0]['localizacao'],
+                size: 110,
+              ),
+            if (_anuncios.length > 1)
+               _ProductCard(
+                imageUrl: _anuncios[1]['imagem'],
+                price: formatPrice(_anuncios[1]),
+                title: _anuncios[1]['titulo'],
+                location: _anuncios[1]['localizacao'],
+                size: 110,
+              ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+             if (_anuncios.length > 2)
+              _ProductCard(
+                imageUrl: _anuncios[2]['imagem'],
+                price: formatPrice(_anuncios[2]),
+                title: _anuncios[2]['titulo'],
+                location: _anuncios[2]['localizacao'],
+                size: 110,
+              ),
+          ],
+        ),
+      ],
+    );
+  }
 }
 
 class _ProductCard extends StatelessWidget {
-  final String imageUrl;
+  final String? imageUrl;
   final String price;
   final String title;
   final String location;
@@ -202,6 +301,19 @@ class _ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget imageWidget;
+    if (imageUrl != null && imageUrl!.isNotEmpty) {
+      try {
+        final decodedBytes = base64Decode(imageUrl!);
+        imageWidget = Image.memory(decodedBytes, fit: BoxFit.cover, gaplessPlayback: true);
+      } catch (e) {
+        print("Erro ao descodificar imagem: $e");
+        imageWidget = const Icon(Icons.broken_image, color: Colors.grey, size: 48);
+      }
+    } else {
+      imageWidget = const Icon(Icons.image_not_supported, color: Colors.grey, size: 48);
+    }
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -210,8 +322,9 @@ class _ProductCard extends StatelessWidget {
           height: size,
           decoration: BoxDecoration(
             border: Border.all(color: const Color(0xFF2E7D5A), width: 3),
+            color: Colors.grey[200],
           ),
-          child: Image.network(imageUrl, fit: BoxFit.cover),
+          child: imageWidget,
         ),
         const SizedBox(height: 4),
         Text(

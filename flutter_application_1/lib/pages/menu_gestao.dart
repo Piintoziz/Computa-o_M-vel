@@ -346,16 +346,6 @@ class _GestaoDrawer extends StatelessWidget {
               icon: Icons.bar_chart,
               onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => AnaliseDadosPage())),
             ),
-            _DrawerNavItem(
-              label: 'Anúncios',
-              icon: Icons.ondemand_video,
-              onTap: () {/* Adicione a rota desejada */},
-            ),
-            _DrawerNavItem(
-              label: 'Destacar Anúncios',
-              icon: Icons.star,
-              onTap: () {/* Adicione a rota desejada */},
-            ),
             _DrawerNavItem(label: "Terminar Sessão", icon: Icons.logout, onTap: () async{
               AuthService().signOut();
               await FirebaseAuth.instance.signOut();
