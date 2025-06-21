@@ -499,22 +499,13 @@ class _PublicarAnuncioPageState extends State<PublicarAnuncioPage> {
       appBar: AppBar(
         backgroundColor: const Color(0xFF2E7D5A),
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            if (widget.onBackToIndex != null) {
-              widget.onBackToIndex!();
-            } else {
-              Navigator.of(context).pop();
-            }
-          },
-        ),
+        automaticallyImplyLeading: false, // Isto remove a seta!
         title: Text(
           widget.anuncioParaEditar != null ? 'Editar Anúncio' : 'Publicar anúncio',
           style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
-            fontSize: 22,
+            fontSize: 28,
           ),
         ),
         centerTitle: true,

@@ -199,14 +199,11 @@ class _MinhaBancaPageState extends State<MinhaBancaPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false, // Isto remove a seta!
         backgroundColor: const Color(0xFF2E7D5A),
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
         centerTitle: true,
-        title: const Text('Minha Banca',           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28, color: Colors.white),
+        title: const Text('Minha Banca', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28, color: Colors.white),
 ),
       ),
       body: Column(
