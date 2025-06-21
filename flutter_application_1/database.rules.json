@@ -4,6 +4,26 @@
     ".write": true,
     "faturas": {
       ".indexOn": ["uid"]
+    },
+    "produtos": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      ".indexOn": ["uid", "categoria"]
+    },
+    "cabazes": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      ".indexOn": "uid"
+    },
+    "anuncios": {
+      ".read": true,
+      ".write": "auth.uid != null"
+    },
+    "users": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "$uid === auth.uid"
+      }
     }
   }
 }
