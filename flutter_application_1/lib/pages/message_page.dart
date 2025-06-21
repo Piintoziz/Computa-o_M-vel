@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
+import '../services/notification_service.dart';
+import '../services/message_notification_service.dart';
 
 class MessagePage extends StatefulWidget {
   const MessagePage({super.key, required this.otherUserID, required this.userName});
@@ -16,6 +18,8 @@ class MessagePage extends StatefulWidget {
 class _MessagePageState extends State<MessagePage> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  final NotificationService _notificationService = NotificationService();
+  final MessageNotificationService _messageNotificationService = MessageNotificationService();
   Timer? _timer;
   List<Map<String, dynamic>> messages = [];
   bool _isLoading = true;
@@ -89,13 +93,24 @@ class _MessagePageState extends State<MessagePage> {
 
       _messageController.clear();
       await _fetchMessages();
+
+      // Firebase Functions will automatically send the notification
+      print('Message sent - Firebase Functions will handle notification');
     } catch (e) {
+      print('Error sending message: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Erro ao enviar mensagem!')),
         );
       }
     }
+  }
+
+  Future<void> _testNotification() async {
+    await _messageNotificationService.showTestNotification();
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Notificação de teste enviada!')),
+    );
   }
 
   @override
@@ -142,6 +157,14 @@ class _MessagePageState extends State<MessagePage> {
             ),
           ],
         ),
+        actions: [
+          // Test notification button
+          IconButton(
+            icon: const Icon(Icons.notifications, color: Colors.white),
+            onPressed: _testNotification,
+            tooltip: 'Testar Notificação',
+          ),
+        ],
       ),
       body: Stack(
         children: [

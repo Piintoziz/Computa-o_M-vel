@@ -4,12 +4,18 @@ import 'pages/detalhes_encomenda_page.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'services/notification_service.dart';
+import 'services/message_notification_service.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
-void main() async {
+Future<void> main() async {
   /* FireBase stuff */
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
+  // Initialize notification services
+  await NotificationService().initialize();
+  await MessageNotificationService().initialize();
 
   /* Main: */
   runApp(const MyApp());
