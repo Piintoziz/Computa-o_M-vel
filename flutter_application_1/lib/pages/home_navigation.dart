@@ -79,6 +79,9 @@ class _HomeNavigationState extends State<HomeNavigation> with ShakeDetectorMixin
             case AppRoutes.definicoesPagamento:
               page = const DefinicoesPagamentoPage();
               break;
+            case AppRoutes.home:
+              page = const MainMenu();
+              break;
             default:
               page = const Center(child: Text('Página não encontrada', style: TextStyle(fontSize: 24)));
           }
@@ -111,16 +114,16 @@ class _HomeNavigationState extends State<HomeNavigation> with ShakeDetectorMixin
                         _navigatorKey.currentState?.pushReplacementNamed(AppRoutes.menuPrincipal);
                         break;
                       case 1:
-                        _navigatorKey.currentState?.pushNamed(AppRoutes.proximasEntregas);
+                        _navigatorKey.currentState?.pushReplacementNamed(AppRoutes.proximasEntregas);
                         break;
                       case 2:
-                        _navigatorKey.currentState?.pushNamed(AppRoutes.publicarAnuncio);
+                        _navigatorKey.currentState?.pushReplacementNamed(AppRoutes.publicarAnuncio);
                         break;
                       case 3:
-                        _navigatorKey.currentState?.pushNamed(AppRoutes.minhaBanca);                        
+                        _navigatorKey.currentState?.pushReplacementNamed(AppRoutes.minhaBanca);                        
                         break;
                       case 4:
-                        _navigatorKey.currentState?.pushNamed(AppRoutes.menuGestao);
+                        _navigatorKey.currentState?.pushReplacementNamed(AppRoutes.menuGestao);
                         break;
                     }
                   },
