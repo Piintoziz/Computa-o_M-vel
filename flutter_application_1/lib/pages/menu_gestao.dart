@@ -54,247 +54,249 @@ class MenuGestao extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Visão Geral da sua Banca
-            Center(
-              child: Text(
-                'Visão Geral da sua Banca',
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Visão Geral da sua Banca
+              Center(
+                child: Text(
+                  'Visão Geral da sua Banca',
+                  style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF2E7D5A),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Center(
+                child: Container(
+                  width: 220,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF2E7D5A),
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  child: const Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _OverviewItem(title: 'Vendas', value: '10'),
+                          _OverviewItem(title: 'Encomendas\nPendentes', value: '3'),
+                        ],
+                      ),
+                      SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _OverviewItem(title: 'Produtos', value: '25'),
+                          _OverviewItem(title: 'Avaliações', value: '7'),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 18),
+              // Próximos Passos
+              Text(
+                'Próximos Passos',
                 style: GoogleFonts.poppins(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: const Color(0xFF2E7D5A),
                 ),
               ),
-            ),
-            const SizedBox(height: 8),
-            Center(
-              child: Container(
-                width: 220,
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF2E7D5A),
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                child: const Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _OverviewItem(title: 'Vendas', value: '10'),
-                        _OverviewItem(title: 'Encomendas\nPendentes', value: '3'),
-                      ],
-                    ),
-                    SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _OverviewItem(title: 'Produtos', value: '25'),
-                        _OverviewItem(title: 'Avaliações', value: '7'),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 18),
-            // Próximos Passos
-            Text(
-              'Próximos Passos',
-              style: GoogleFonts.poppins(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xFF2E7D5A),
-              ),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.only(top: 6),
-                  child: Icon(Icons.circle, size: 10, color: Color(0xFF2E7D5A)),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    'Faça o setup da sua banca!',
-                    style: GoogleFonts.poppins(
-                      fontSize: 15,
-                      color: const Color(0xFF585858),
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 6),
-            Padding(
-              padding: const EdgeInsets.only(left: 18),
-              child: SizedBox(
-                width: 180,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF184D2B),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                  ),
-                  onPressed: () {
-                      Navigator.pushNamed(context, AppRoutes.minhaBanca);
-                  },
-                  child: Text(
-                    'Ir para a Minha Banca',
-                    style: GoogleFonts.poppins(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.only(top: 6),
-                  child: Icon(Icons.circle, size: 10, color: Color(0xFF2E7D5A)),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    'Publique o seu primeiro anúncio',
-                    style: GoogleFonts.poppins(
-                      fontSize: 15,
-                      color: const Color(0xFF585858),
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 6),
-            Padding(
-              padding: const EdgeInsets.only(left: 18),
-              child: SizedBox(
-                width: 180,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF184D2B),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                  ),
-                  onPressed: () {
-                      Navigator.pushNamed(context, AppRoutes.publicarAnuncio);
-                  },
-                  child: Text(
-                    'Criar novo anúncio',
-                    style: GoogleFonts.poppins(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.only(top: 6),
-                  child: Icon(Icons.circle, size: 10, color: Color(0xFF2E7D5A)),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    'Encontre utilizadores próximos',
-                    style: GoogleFonts.poppins(
-                      fontSize: 15,
-                      color: const Color(0xFF585858),
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 6),
-            Padding(
-              padding: const EdgeInsets.only(left: 18),
-              child: SizedBox(
-                width: 180,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF184D2B),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                  ),
-                  onPressed: () => Navigator.of(context, rootNavigator: true).pushNamed(AppRoutes.maps),
-                  child: Text(
-                    'Ver Mapa',
-                    style: GoogleFonts.poppins(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 18),
-            const Divider(thickness: 3, color: Color(0xFF2E7D5A)),
-            // Bottom Doubt Section
-            const SizedBox(height: 24),
-            Center(
-              child: Column(
+              const SizedBox(height: 8),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Image.asset(
-                    'assets/images/doubt_icon.png',
-                    height: 72,
+                  const Padding(
+                    padding: EdgeInsets.only(top: 6),
+                    child: Icon(Icons.circle, size: 10, color: Color(0xFF2E7D5A)),
                   ),
-                  const SizedBox(height: 12),
-                  Text(
-                      'Alguma Dúvida?',
-                      style: GoogleFonts.lilitaOne(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 32,
-                        color: Colors.black,
-                        shadows: const [
-                          Shadow(
-                            offset: Offset(2, 2),
-                            blurRadius: 2,
-                            color: Colors.black26,
-                          ),
-                        ],
-                      ),
-                    ),
-                  const SizedBox(height: 8),
-                  TextButton(
-                    onPressed: () {},
+                  const SizedBox(width: 8),
+                  Expanded(
                     child: Text(
-                      'Entre em contacto connosco!',
+                      'Faça o setup da sua banca!',
                       style: GoogleFonts.poppins(
-                        color: const Color(0xFF2E7D5A),
+                        fontSize: 15,
+                        color: const Color(0xFF585858),
                         fontWeight: FontWeight.normal,
-                        fontSize: 16,
                       ),
                     ),
                   ),
                 ],
               ),
-            ),
-          ],
+              const SizedBox(height: 6),
+              Padding(
+                padding: const EdgeInsets.only(left: 18),
+                child: SizedBox(
+                  width: 180,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF184D2B),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                    ),
+                    onPressed: () {
+                        Navigator.pushNamed(context, AppRoutes.minhaBanca);
+                    },
+                    child: Text(
+                      'Ir para a Minha Banca',
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(top: 6),
+                    child: Icon(Icons.circle, size: 10, color: Color(0xFF2E7D5A)),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Publique o seu primeiro anúncio',
+                      style: GoogleFonts.poppins(
+                        fontSize: 15,
+                        color: const Color(0xFF585858),
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              Padding(
+                padding: const EdgeInsets.only(left: 18),
+                child: SizedBox(
+                  width: 180,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF184D2B),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                    ),
+                    onPressed: () {
+                        Navigator.pushNamed(context, AppRoutes.publicarAnuncio);
+                    },
+                    child: Text(
+                      'Criar novo anúncio',
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(top: 6),
+                    child: Icon(Icons.circle, size: 10, color: Color(0xFF2E7D5A)),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Encontre utilizadores próximos',
+                      style: GoogleFonts.poppins(
+                        fontSize: 15,
+                        color: const Color(0xFF585858),
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              Padding(
+                padding: const EdgeInsets.only(left: 18),
+                child: SizedBox(
+                  width: 180,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF184D2B),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                    ),
+                    onPressed: () => Navigator.of(context, rootNavigator: true).pushNamed(AppRoutes.maps),
+                    child: Text(
+                      'Ver Mapa',
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 18),
+              const Divider(thickness: 3, color: Color(0xFF2E7D5A)),
+              // Bottom Doubt Section
+              const SizedBox(height: 24),
+              Center(
+                child: Column(
+                  children: [
+                    Image.asset(
+                      'assets/images/doubt_icon.png',
+                      height: 72,
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                        'Alguma Dúvida?',
+                        style: GoogleFonts.lilitaOne(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 32,
+                          color: Colors.black,
+                          shadows: const [
+                            Shadow(
+                              offset: Offset(2, 2),
+                              blurRadius: 2,
+                              color: Colors.black26,
+                            ),
+                          ],
+                        ),
+                      ),
+                    const SizedBox(height: 8),
+                    TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        'Entre em contacto connosco!',
+                        style: GoogleFonts.poppins(
+                          color: const Color(0xFF2E7D5A),
+                          fontWeight: FontWeight.normal,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
