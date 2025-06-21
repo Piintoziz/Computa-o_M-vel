@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/material.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -44,9 +45,6 @@ class NotificationService {
 
     // Handle foreground messages
     FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
-
-    // Handle background messages
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
     // Handle notification taps when app is opened from notification
     FirebaseMessaging.onMessageOpenedApp.listen(_handleNotificationTap);
@@ -120,6 +118,9 @@ class NotificationService {
       showWhen: true,
       enableVibration: true,
       playSound: true,
+      channelShowBadge: true,
+      icon: '@mipmap/ic_launcher',
+      color: Color(0xFF2E7D5A),
     );
 
     const DarwinNotificationDetails iOSPlatformChannelSpecifics =
@@ -177,44 +178,4 @@ class NotificationService {
   Future<String?> getToken() async {
     return await _firebaseMessaging.getToken();
   }
-}
-
-// This needs to be a top-level function
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print('Handling a background message: ${message.messageId}');
-  
-  // Show local notification for background messages
-  final FlutterLocalNotificationsPlugin localNotifications = 
-      FlutterLocalNotificationsPlugin();
-  
-  const AndroidNotificationDetails androidPlatformChannelSpecifics =
-      AndroidNotificationDetails(
-    'messages_channel',
-    'Mensagens',
-    channelDescription: 'Canal para notificações de mensagens',
-    importance: Importance.max,
-    priority: Priority.high,
-    showWhen: true,
-    enableVibration: true,
-    playSound: true,
-  );
-
-  const DarwinNotificationDetails iOSPlatformChannelSpecifics =
-      DarwinNotificationDetails(
-    presentAlert: true,
-    presentBadge: true,
-    presentSound: true,
-  );
-
-  const NotificationDetails platformChannelSpecifics = NotificationDetails(
-    android: androidPlatformChannelSpecifics,
-    iOS: iOSPlatformChannelSpecifics,
-  );
-
-  await localNotifications.show(
-    DateTime.now().millisecondsSinceEpoch.remainder(100000),
-    message.notification?.title ?? 'Nova Mensagem',
-    message.notification?.body ?? 'Você recebeu uma nova mensagem',
-    platformChannelSpecifics,
-  );
 } 
