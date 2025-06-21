@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class DefinicoesContaPage extends StatefulWidget {
   const DefinicoesContaPage({Key? key}) : super(key: key);
@@ -8,12 +10,38 @@ class DefinicoesContaPage extends StatefulWidget {
 }
 
 class _DefinicoesContaPageState extends State<DefinicoesContaPage> {
-  String nome = 'João Silva';
-  String email = 'joao@email.com';
-  bool administradorCompleto = false;
+  final TextEditingController _nomeController = TextEditingController();
+  String _email = 'A carregar...';
+  bool _administradorCompleto = false;
 
-  void _editarCampo(String campo, String valorAtual, Function(String) onConfirmar) {
-    final controller = TextEditingController(text: valorAtual);
+  @override
+  void initState() {
+    super.initState();
+    _carregarDadosConta();
+  }
+
+  Future<void> _carregarDadosConta() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final ref = FirebaseDatabase.instance.ref('userdata/${user.uid}');
+    final snapshot = await ref.get();
+
+    if (mounted) {
+      setState(() {
+        _email = user.email ?? 'Sem email';
+        if (snapshot.exists && snapshot.value != null) {
+          final data = Map<String, dynamic>.from(snapshot.value as Map);
+          _nomeController.text = data['name'] ?? user.displayName ?? 'Sem nome';
+          _administradorCompleto = data['administrador_completo'] ?? false;
+        } else {
+          _nomeController.text = user.displayName ?? 'Sem nome';
+        }
+      });
+    }
+  }
+
+  void _editarCampo(String campo, TextEditingController controller) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -26,7 +54,7 @@ class _DefinicoesContaPageState extends State<DefinicoesContaPage> {
           ),
           ElevatedButton(
             onPressed: () {
-              onConfirmar(controller.text);
+              setState(() {}); // Para atualizar a UI imediatamente
               Navigator.pop(context);
             },
             child: const Text('Confirmar'),
@@ -36,14 +64,23 @@ class _DefinicoesContaPageState extends State<DefinicoesContaPage> {
     );
   }
 
-  void _salvarAlteracoes() {
-    // TODO: guardar dados no Firebase futuramente
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Dados da conta salvos com sucesso!')),
-    );
+  void _salvarAlteracoes() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+    
+    await FirebaseDatabase.instance.ref('userdata/${user.uid}').update({
+      'name': _nomeController.text.trim(),
+      'administrador_completo': _administradorCompleto,
+    });
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Dados da conta salvos com sucesso!')),
+      );
+    }
   }
 
-  Widget _buildInfoTile(String titulo, String valor, Function(String) onEditar) {
+  Widget _buildInfoTile(String titulo, String valor, {bool editavel = true}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -54,10 +91,11 @@ class _DefinicoesContaPageState extends State<DefinicoesContaPage> {
             Expanded(
               child: Text(valor, style: const TextStyle(fontSize: 14, color: Colors.black87)),
             ),
-            TextButton(
-              onPressed: () => _editarCampo(titulo, valor, onEditar),
-              child: const Text('Editar', style: TextStyle(color: Color(0xFF2E7D5A))),
-            )
+            if (editavel)
+              TextButton(
+                onPressed: () => _editarCampo(titulo, _nomeController),
+                child: const Text('Editar', style: TextStyle(color: Color(0xFF2E7D5A))),
+              )
           ],
         ),
         const Divider(),
@@ -77,11 +115,11 @@ class _DefinicoesContaPageState extends State<DefinicoesContaPage> {
               child: Text('Administrador completo', style: TextStyle(fontSize: 14)),
             ),
             Switch(
-              value: administradorCompleto,
+              value: _administradorCompleto,
               activeColor: const Color(0xFF2E7D5A),
               onChanged: (bool value) {
                 setState(() {
-                  administradorCompleto = value;
+                  _administradorCompleto = value;
                 });
               },
             ),
@@ -117,8 +155,8 @@ class _DefinicoesContaPageState extends State<DefinicoesContaPage> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Column(
           children: [
-            _buildInfoTile('Nome', nome, (novo) => setState(() => nome = novo)),
-            _buildInfoTile('Email', email, (novo) => setState(() => email = novo)),
+            _buildInfoTile('Nome', _nomeController.text),
+            _buildInfoTile('Email', _email, editavel: false),
             _buildPermissoesTile(),
             const SizedBox(height: 24),
             ElevatedButton(

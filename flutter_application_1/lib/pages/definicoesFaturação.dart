@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class DefinicoesFaturacaoPage extends StatefulWidget {
   const DefinicoesFaturacaoPage({Key? key}) : super(key: key);
@@ -8,11 +10,35 @@ class DefinicoesFaturacaoPage extends StatefulWidget {
 }
 
 class _DefinicoesFaturacaoPageState extends State<DefinicoesFaturacaoPage> {
-  String nif = '123456789';
-  String morada = 'Rua Exemplo, nº 123, Lisboa';
+  final TextEditingController _nifController = TextEditingController(text: 'A carregar...');
+  final TextEditingController _moradaController = TextEditingController(text: 'A carregar...');
 
-  void _editarCampo(String campo, String valorAtual, Function(String) onConfirmar) {
-    final controller = TextEditingController(text: valorAtual);
+  @override
+  void initState() {
+    super.initState();
+    _carregarDadosFaturacao();
+  }
+
+  Future<void> _carregarDadosFaturacao() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+    final ref = FirebaseDatabase.instance.ref('userdata/${user.uid}/faturacao');
+    final snapshot = await ref.get();
+    if (snapshot.exists && snapshot.value != null) {
+      final data = Map<String, dynamic>.from(snapshot.value as Map);
+      setState(() {
+        _nifController.text = data['nif'] ?? 'Não definido';
+        _moradaController.text = data['morada'] ?? 'Não definida';
+      });
+    } else {
+      setState(() {
+        _nifController.text = 'Não definido';
+        _moradaController.text = 'Não definida';
+      });
+    }
+  }
+
+  void _editarCampo(String campo, TextEditingController controller) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -25,7 +51,7 @@ class _DefinicoesFaturacaoPageState extends State<DefinicoesFaturacaoPage> {
           ),
           ElevatedButton(
             onPressed: () {
-              onConfirmar(controller.text);
+              setState((){});
               Navigator.pop(context);
             },
             child: const Text('Confirmar'),
@@ -35,14 +61,23 @@ class _DefinicoesFaturacaoPageState extends State<DefinicoesFaturacaoPage> {
     );
   }
 
-  void _salvarAlteracoes() {
-    // TODO: guardar dados no Firebase futuramente
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Dados de faturação salvos com sucesso!')),
-    );
+  void _salvarAlteracoes() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+    
+    await FirebaseDatabase.instance.ref('userdata/${user.uid}/faturacao').update({
+      'nif': _nifController.text.trim(),
+      'morada': _moradaController.text.trim(),
+    });
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Dados de faturação salvos com sucesso!')),
+      );
+    }
   }
 
-  Widget _buildInfoTile(String titulo, String valor, Function(String) onEditar) {
+  Widget _buildInfoTile(String titulo, TextEditingController controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -50,9 +85,9 @@ class _DefinicoesFaturacaoPageState extends State<DefinicoesFaturacaoPage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(child: Text(valor, style: const TextStyle(fontSize: 14))),
+            Expanded(child: Text(controller.text, style: const TextStyle(fontSize: 14))),
             TextButton(
-              onPressed: () => _editarCampo(titulo, valor, onEditar),
+              onPressed: () => _editarCampo(titulo, controller),
               child: const Text('Editar', style: TextStyle(color: Color(0xFF2E7D5A))),
             ),
           ],
@@ -87,8 +122,8 @@ class _DefinicoesFaturacaoPageState extends State<DefinicoesFaturacaoPage> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            _buildInfoTile('NIF', nif, (novo) => setState(() => nif = novo)),
-            _buildInfoTile('Morada de faturação', morada, (novo) => setState(() => morada = novo)),
+            _buildInfoTile('NIF', _nifController),
+            _buildInfoTile('Morada de faturação', _moradaController),
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: _salvarAlteracoes,

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class DefinicoesNotificacoesPage extends StatefulWidget {
   const DefinicoesNotificacoesPage({Key? key}) : super(key: key);
@@ -8,15 +10,46 @@ class DefinicoesNotificacoesPage extends StatefulWidget {
 }
 
 class _DefinicoesNotificacoesPageState extends State<DefinicoesNotificacoesPage> {
-  bool novasEncomendas = false;
-  bool descontosAplicados = false;
-  bool campanhasMarketing = false;
+  bool _novasEncomendas = false;
+  bool _descontosAplicados = false;
+  bool _campanhasMarketing = false;
 
-  void _salvarPreferencias() {
-    // TODO: guardar preferências no Firebase ou localmente
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Preferências salvas com sucesso!')),
-    );
+  @override
+  void initState() {
+    super.initState();
+    _carregarPreferencias();
+  }
+
+  Future<void> _carregarPreferencias() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+    final ref = FirebaseDatabase.instance.ref('userdata/${user.uid}/notificacoes');
+    final snapshot = await ref.get();
+    if (snapshot.exists && snapshot.value != null) {
+      final data = Map<String, dynamic>.from(snapshot.value as Map);
+      setState(() {
+        _novasEncomendas = data['novas_encomendas'] ?? false;
+        _descontosAplicados = data['descontos_aplicados'] ?? false;
+        _campanhasMarketing = data['campanhas_marketing'] ?? false;
+      });
+    }
+  }
+
+  void _salvarPreferencias() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+    
+    await FirebaseDatabase.instance.ref('userdata/${user.uid}/notificacoes').update({
+      'novas_encomendas': _novasEncomendas,
+      'descontos_aplicados': _descontosAplicados,
+      'campanhas_marketing': _campanhasMarketing,
+    });
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Preferências salvas com sucesso!')),
+      );
+    }
   }
 
   Widget _buildSwitchTile(String titulo, String subtitulo, bool valor, Function(bool) onChanged) {
@@ -65,12 +98,12 @@ class _DefinicoesNotificacoesPageState extends State<DefinicoesNotificacoesPage>
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            _buildSwitchTile('Novas encomendas', 'Receba notificações sobre novas encomendas', novasEncomendas,
-                (val) => novasEncomendas = val),
-            _buildSwitchTile('Descontos aplicados', 'Receba notificações sobre novos descontos', descontosAplicados,
-                (val) => descontosAplicados = val),
-            _buildSwitchTile('Campanhas de Marketing', 'Receba notificações sobre campanhas', campanhasMarketing,
-                (val) => campanhasMarketing = val),
+            _buildSwitchTile('Novas encomendas', 'Receba notificações sobre novas encomendas', _novasEncomendas,
+                (val) => setState(() => _novasEncomendas = val)),
+            _buildSwitchTile('Descontos aplicados', 'Receba notificações sobre novos descontos', _descontosAplicados,
+                (val) => setState(() => _descontosAplicados = val)),
+            _buildSwitchTile('Campanhas de Marketing', 'Receba notificações sobre campanhas', _campanhasMarketing,
+                (val) => setState(() => _campanhasMarketing = val)),
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: _salvarPreferencias,

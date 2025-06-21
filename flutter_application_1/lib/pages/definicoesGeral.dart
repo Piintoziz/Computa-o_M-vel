@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class DefinicoesGeralPage extends StatefulWidget {
   const DefinicoesGeralPage({Key? key}) : super(key: key);
@@ -8,27 +10,52 @@ class DefinicoesGeralPage extends StatefulWidget {
 }
 
 class _DefinicoesGeralPageState extends State<DefinicoesGeralPage> {
-  // Dados simulados - serão substituídos pelos dados do Firebase futuramente
-  String nomeLoja = 'Loja do Sr.Dinis';
-  String descricao = 'Venda de produtos agrícolas e locais';
-  String localizacao = 'Rua da agricultura, 10';
-  String contacto = '+351 91029384';
+  final TextEditingController _nomeLojaController = TextEditingController();
+  final TextEditingController _descricaoController = TextEditingController();
+  final TextEditingController _localizacaoController = TextEditingController();
+  final TextEditingController _contactoController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    // TODO: carregar dados da loja do Firebase
+    _carregarDadosDaLoja();
   }
 
-  void _salvarAlteracoes() {
-    // TODO: implementar lógica de salvar alterações no Firebase
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Alterações salvas com sucesso!')),
-    );
+  Future<void> _carregarDadosDaLoja() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+    final ref = FirebaseDatabase.instance.ref('userdata/${user.uid}');
+    final snapshot = await ref.get();
+    if (snapshot.exists && snapshot.value != null) {
+      final data = Map<String, dynamic>.from(snapshot.value as Map);
+      setState(() {
+        _nomeLojaController.text = data['nome_loja'] ?? 'Defina um nome';
+        _descricaoController.text = data['descricao'] ?? '';
+        _localizacaoController.text = data['localizacao'] ?? '';
+        _contactoController.text = data['contacto'] ?? '';
+      });
+    }
   }
 
-  void _editarCampo(String campo, String valorAtual, Function(String) onConfirmar) {
-    TextEditingController controller = TextEditingController(text: valorAtual);
+  void _salvarAlteracoes() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    await FirebaseDatabase.instance.ref('userdata/${user.uid}').update({
+      'nome_loja': _nomeLojaController.text.trim(),
+      'descricao': _descricaoController.text.trim(),
+      'localizacao': _localizacaoController.text.trim(),
+      'contacto': _contactoController.text.trim(),
+    });
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Alterações salvas com sucesso!')),
+      );
+    }
+  }
+
+  void _editarCampo(String campo, TextEditingController controller) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -44,7 +71,6 @@ class _DefinicoesGeralPageState extends State<DefinicoesGeralPage> {
           ),
           ElevatedButton(
             onPressed: () {
-              onConfirmar(controller.text);
               Navigator.pop(context);
             },
             child: const Text('Confirmar'),
@@ -86,18 +112,10 @@ class _DefinicoesGeralPageState extends State<DefinicoesGeralPage> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Column(
           children: [
-            _buildInfoTile('Nome da loja', nomeLoja, (novo) {
-              setState(() => nomeLoja = novo);
-            }),
-            _buildInfoTile('Descrição', descricao, (novo) {
-              setState(() => descricao = novo);
-            }),
-            _buildInfoTile('Localização', localizacao, (novo) {
-              setState(() => localizacao = novo);
-            }),
-            _buildInfoTile('Contacto', contacto, (novo) {
-              setState(() => contacto = novo);
-            }),
+            _buildInfoTile('Nome da loja', _nomeLojaController),
+            _buildInfoTile('Descrição', _descricaoController),
+            _buildInfoTile('Localização', _localizacaoController),
+            _buildInfoTile('Contacto', _contactoController),
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: _salvarAlteracoes,
@@ -120,7 +138,7 @@ class _DefinicoesGeralPageState extends State<DefinicoesGeralPage> {
     );
   }
 
-  Widget _buildInfoTile(String titulo, String valor, Function(String) onEditar) {
+  Widget _buildInfoTile(String titulo, TextEditingController controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -130,11 +148,11 @@ class _DefinicoesGeralPageState extends State<DefinicoesGeralPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: Text(valor,
+              child: Text(controller.text,
                   style: const TextStyle(fontSize: 14, color: Colors.black87)),
             ),
             TextButton(
-              onPressed: () => _editarCampo(titulo, valor, onEditar),
+              onPressed: () => _editarCampo(titulo, controller),
               child: const Text(
                 'Editar',
                 style: TextStyle(color: Color(0xFF2E7D5A)),

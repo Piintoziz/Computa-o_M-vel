@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class DefinicoesPagamentoPage extends StatefulWidget {
   const DefinicoesPagamentoPage({Key? key}) : super(key: key);
@@ -8,12 +10,38 @@ class DefinicoesPagamentoPage extends StatefulWidget {
 }
 
 class _DefinicoesPagamentoPageState extends State<DefinicoesPagamentoPage> {
-  String iban = 'PT050 0000 0000 0000 0000';
-  String paypal = 'exemplo@exemplo.com';
-  String mbway = '+351 000000000';
+  final TextEditingController _ibanController = TextEditingController(text: 'A carregar...');
+  final TextEditingController _paypalController = TextEditingController(text: 'A carregar...');
+  final TextEditingController _mbwayController = TextEditingController(text: 'A carregar...');
 
-  void _editarCampo(String campo, String valorAtual, Function(String) onConfirmar) {
-    TextEditingController controller = TextEditingController(text: valorAtual);
+  @override
+  void initState() {
+    super.initState();
+    _carregarDadosPagamento();
+  }
+
+  Future<void> _carregarDadosPagamento() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+    final ref = FirebaseDatabase.instance.ref('userdata/${user.uid}/pagamento');
+    final snapshot = await ref.get();
+    if (snapshot.exists && snapshot.value != null) {
+      final data = Map<String, dynamic>.from(snapshot.value as Map);
+      setState(() {
+        _ibanController.text = data['iban'] ?? 'Não definido';
+        _paypalController.text = data['paypal'] ?? 'Não definido';
+        _mbwayController.text = data['mbway'] ?? 'Não definido';
+      });
+    } else {
+      setState(() {
+        _ibanController.text = 'Não definido';
+        _paypalController.text = 'Não definido';
+        _mbwayController.text = 'Não definido';
+      });
+    }
+  }
+
+  void _editarCampo(String campo, TextEditingController controller) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -26,7 +54,7 @@ class _DefinicoesPagamentoPageState extends State<DefinicoesPagamentoPage> {
           ),
           ElevatedButton(
             onPressed: () {
-              onConfirmar(controller.text);
+              setState(() {});
               Navigator.pop(context);
             },
             child: const Text('Confirmar'),
@@ -36,11 +64,21 @@ class _DefinicoesPagamentoPageState extends State<DefinicoesPagamentoPage> {
     );
   }
 
-  void _salvarAlteracoes() {
-    // TODO: salvar dados no Firebase futuramente
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Dados salvos com sucesso!')),
-    );
+  void _salvarAlteracoes() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    await FirebaseDatabase.instance.ref('userdata/${user.uid}/pagamento').update({
+      'iban': _ibanController.text.trim(),
+      'paypal': _paypalController.text.trim(),
+      'mbway': _mbwayController.text.trim(),
+    });
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Dados salvos com sucesso!')),
+      );
+    }
   }
 
   @override
@@ -68,9 +106,9 @@ class _DefinicoesPagamentoPageState extends State<DefinicoesPagamentoPage> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            _buildInfoTile('IBAN', iban, (novo) => setState(() => iban = novo)),
-            _buildInfoTile('PAYPAL', paypal, (novo) => setState(() => paypal = novo)),
-            _buildInfoTile('MB Way', mbway, (novo) => setState(() => mbway = novo)),
+            _buildInfoTile('IBAN', _ibanController),
+            _buildInfoTile('PAYPAL', _paypalController),
+            _buildInfoTile('MB Way', _mbwayController),
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: _salvarAlteracoes,
@@ -88,7 +126,7 @@ class _DefinicoesPagamentoPageState extends State<DefinicoesPagamentoPage> {
     );
   }
 
-  Widget _buildInfoTile(String titulo, String valor, Function(String) onEditar) {
+  Widget _buildInfoTile(String titulo, TextEditingController controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -96,9 +134,9 @@ class _DefinicoesPagamentoPageState extends State<DefinicoesPagamentoPage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(child: Text(valor, style: const TextStyle(fontSize: 14))),
+            Expanded(child: Text(controller.text, style: const TextStyle(fontSize: 14))),
             TextButton(
-              onPressed: () => _editarCampo(titulo, valor, onEditar),
+              onPressed: () => _editarCampo(titulo, controller),
               child: const Text('Editar', style: TextStyle(color: Color(0xFF2E7D5A))),
             ),
           ],
