@@ -57,6 +57,7 @@ class _MinhaBancaPageState extends State<MinhaBancaPage> {
     if (user == null) return;
     final snapshot = await FirebaseDatabase.instance.ref('userdata/${user.uid}/nome_loja').get();
     if (snapshot.exists && snapshot.value != null) {
+      if (!mounted) return;
       setState(() {
         _shopName = snapshot.value.toString();
         _shopNameController.text = _shopName;
@@ -68,6 +69,7 @@ class _MinhaBancaPageState extends State<MinhaBancaPage> {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
     await FirebaseDatabase.instance.ref('userdata/${user.uid}/nome_loja').set(newName);
+    if (!mounted) return;
     setState(() {
       _shopName = newName;
     });
@@ -96,6 +98,7 @@ class _MinhaBancaPageState extends State<MinhaBancaPage> {
         });
       }
     }
+    if (!mounted) return;
     setState(() {
       _anuncios = anuncios;
     });
@@ -106,6 +109,7 @@ class _MinhaBancaPageState extends State<MinhaBancaPage> {
     if (user == null) return;
     final snapshot = await FirebaseDatabase.instance.ref('userdata/${user.uid}/imagem_banca').get();
     if (snapshot.exists && snapshot.value != null) {
+      if (!mounted) return;
       setState(() {
         _imagemBancaBase64 = snapshot.value.toString();
       });
@@ -121,6 +125,7 @@ class _MinhaBancaPageState extends State<MinhaBancaPage> {
       final bytes = await File(pickedFile.path).readAsBytes();
       final base64Image = base64Encode(bytes);
       await FirebaseDatabase.instance.ref('userdata/${user.uid}/imagem_banca').set(base64Image);
+      if (!mounted) return;
       setState(() {
         _imagemBancaBase64 = base64Image;
       });

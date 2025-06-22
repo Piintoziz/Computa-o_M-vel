@@ -95,34 +95,28 @@ class DetalhesEncomendaPage extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.network(
-                          item.imagemUrl,
-                          width: 48,
-                          height: 48,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              width: 48,
-                              height: 48,
-                              color: Colors.grey[200],
-                              child: const Icon(Icons.image_not_supported, color: Colors.grey),
-                            );
-                          },
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return Container(
-                              width: 48,
-                              height: 48,
-                              color: Colors.grey[200],
-                              child: const Center(
-                                child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF2E7D5A)),
+                      SizedBox(
+                        width: 48,
+                        height: 48,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: item.imagemUrl.startsWith('http')
+                              ? Image.network(
+                                  item.imagemUrl,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      const Icon(Icons.image_not_supported, color: Colors.grey),
+                                  loadingBuilder: (context, child, loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return const Center(child: CircularProgressIndicator());
+                                  },
+                                )
+                              : Image.asset(
+                                  item.imagemUrl,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      const Icon(Icons.broken_image, color: Colors.red),
                                 ),
-                              ),
-                            );
-                          },
                         ),
                       ),
                       const SizedBox(width: 12),
