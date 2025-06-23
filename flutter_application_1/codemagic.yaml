@@ -1,0 +1,26 @@
+workflows:
+  flutter-build:
+    name: Flutter Build and Distribute
+    environment:
+      flutter: stable
+      vars:
+        FIREBASE_APP_ID: "<1:528642462565:android:1c43beb9cb2585ce15878c>"
+      groups:
+        - firebase_credentials # vai buscar da aba de Environment no Codemagic
+    scripts:
+      - name: Install dependencies
+        script: flutter pub get
+
+      - name: Build AAB
+        script: flutter build appbundle
+
+      - name: Save Firebase credentials to file
+        script: |
+          echo $GOOGLE_APPLICATION_CREDENTIALS > firebase_service_account.json
+          export GOOGLE_APPLICATION_CREDENTIALS=firebase_service_account.json
+
+      - name: Distribute to Firebase
+        script: |
+          firebase appdistribution:distribute build/app/outputs/bundle/release/app-release.aab \
+            --app $FIREBASE_APP_ID \
+            --groups "Devs"
