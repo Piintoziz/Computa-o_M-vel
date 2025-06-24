@@ -88,7 +88,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   child: ElevatedButton(
                     onPressed: _loading ? null : _sendResetEmail,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF2E8B57), // Green
+                      backgroundColor: const Color(0xFF2E8B57),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(24),
                       ),

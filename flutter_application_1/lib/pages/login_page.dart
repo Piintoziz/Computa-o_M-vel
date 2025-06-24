@@ -52,7 +52,6 @@ class _LoginPageState extends State<LoginPage> with ShakeDetectorMixin {
                 ],
               ),
           
-              //Title:
               Center(
                 child: Text(
                   'Login',
@@ -60,7 +59,6 @@ class _LoginPageState extends State<LoginPage> with ShakeDetectorMixin {
                 ),
               ),
           
-              //EMAIL TEXTBOX:
               TextFormField(
                 controller: _emailController,
                 validator: (value) {
@@ -80,7 +78,6 @@ class _LoginPageState extends State<LoginPage> with ShakeDetectorMixin {
               ),
               const SizedBox(height: 8),
           
-              //PASSWORD TEXTBOX:
               TextFormField(
                 controller: _passwordController,
                 validator: (value) {

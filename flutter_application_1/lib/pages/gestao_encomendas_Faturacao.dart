@@ -333,7 +333,6 @@ class _GestaoEncomendasFaturacaoPageState extends State<GestaoEncomendasFaturaca
                     }
                   },
                   onView: () async {
-                    // Buscar dados extra da fatura para mostrar no dialog
                     final user = FirebaseAuth.instance.currentUser;
                     if (user == null) return;
                     final snapshot = await FirebaseDatabase.instance.ref('faturas').orderByChild('uid').equalTo(user.uid).get();
